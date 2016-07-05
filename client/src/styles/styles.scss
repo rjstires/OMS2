@@ -1,0 +1,30 @@
+.form-error {
+  color: #ef9a9a;
+}
+
+.banner-note {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  min-height: 50px;
+  border-radius: 3px;
+  padding: 6px;
+
+  div {
+    width: 100%;
+  }
+
+  &.success {
+    background-color: #a5d6a7;
+    color: #fff;
+  }
+  &.info {
+    background-color: #90caf9;
+  }
+  &.debug {
+    background-color: #fff59d;
+  }
+  &.error {
+    background-color: #ef9a9a;
+  }
+}
