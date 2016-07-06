@@ -186,13 +186,6 @@ export function confirmEmailRequest(token) {
   };
 }
 
-export function confirmEmailSuccess(user) {
-  return {
-    type: VALIDATE_TOKEN_SUCCESS,
-    user
-  };
-}
-
 export function confirmEmailFailure(error) {
   return {
     type: VALIDATE_TOKEN_FAILURE,
@@ -272,12 +265,6 @@ export function logoutSuccess() {
   };
 }
 
-export function logoutFailure() {
-  return {
-    type: LOG_OUT_FAILURE
-  };
-}
-
 export function logout() {
   return function(dispatch) {
     dispatch(logoutRequest());
@@ -294,13 +281,6 @@ export function validateJWTRequest(token) {
   return {
     type: VALIDATION_JWT_REQUEST,
     token
-  };
-}
-
-export function validateJWTSuccess(user) {
-  return {
-    type: VALIDATE_JWT_SUCCESS,
-    user
   };
 }
 
