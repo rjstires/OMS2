@@ -11,4 +11,7 @@ router.route('/register')
 router.route('/confirm')
   .get(authController.confirm);
 
+router.route('/validate-token')
+  .get(authController.validateToken);
+
 module.exports = router;

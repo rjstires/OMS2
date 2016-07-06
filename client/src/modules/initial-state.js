@@ -6,6 +6,7 @@ export default {
 
   registration: {
     loading: false,
+    user: null
   },
 
   bannerNote: {

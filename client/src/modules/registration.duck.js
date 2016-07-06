@@ -1,7 +1,7 @@
 // registration.js
 import axios from 'axios';
 import {browserHistory} from 'react-router';
-import {bannerNote} from './banner-note.duck';
+import {sendBannerNote} from './banner-note.duck';
 import initialState from './initial-state';
 
 /****************************************
@@ -16,6 +16,7 @@ const CONFIRM_TOKEN_SUCCESS = 'CONFIRM_TOKEN_SUCCESS';
 const CONFIRM_TOKEN_FAILURE = 'CONFIRM_TOKEN_FAILURE';
 
 const UPDATE_USER = 'UPDATE_USER';
+const REMOVE_USER = 'REMOVE_USER';
 
 /****************************************
  *  Reducer
@@ -72,6 +73,9 @@ export default function reducer(state = initialState.registration, action) {
     case UPDATE_USER:
       return Object.assign({}, state, {user: action.user});
 
+    case REMOVE_USER:
+      return Object.assign({}, state, {user: null});
+
     default:
       return state;
   }
@@ -107,11 +111,11 @@ export function registerUser(credentials) {
       .then(() => {
         browserHistory.push('/');
         dispatch(registerSuccess());
-        dispatch(bannerNote('Successfully registered, please login.', 2500));
+        dispatch(sendBannerNote('Successfully registered, please login.', 2500));
       })
       .catch((response) => {
         dispatch(registerFailure());
-        dispatch(bannerNote(response.data.message, 2500, 'error'));
+        dispatch(sendBannerNote(response.data.message, 2500, 'error'));
       });
   };
 }
@@ -140,9 +144,8 @@ export function confirmTokenFailure(error) {
 export function confirmToken(token) {
   return (dispatch) => {
     dispatch(confirmTokenRequest(token));
-    console.log('sending request');
     axios.get(`http://localhost:4000/confirm?token=${token}`)
-      .then(function(response) {
+      .then(function() {
         dispatch(confirmTokenSuccess());
       })
       .catch(function(error) {
@@ -155,7 +158,13 @@ export function updateUser(user) {
   return {
     type: UPDATE_USER,
     user
-  }
+  };
 }
 
-export const actions = {registerUser, confirmToken, updateUser};
+export function removeUser() {
+  return {
+    type: REMOVE_USER
+  };
+}
+
+export const actions = {registerUser, confirmToken, updateUser, removeUser};

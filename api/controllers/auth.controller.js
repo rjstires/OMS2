@@ -4,18 +4,18 @@ var _ = require('lodash');
 var User = require('../models/user.model').User;
 var sendMail = require('../utilities/sendMail');
 
+var fieldsToReturn = 'firstName lastName emailAddress confirmedEmail password';
+
 module.exports.login = function(req, res) {
   var emailAddress = req.body.emailAddress.toLocaleLowerCase();
   var password = req.body.password;
 
-  User.findOne({emailAddress: emailAddress})
+  User.findOne({emailAddress: emailAddress}, fieldsToReturn)
     .exec()
     .then(function(user) {
       if (user) {
         if (user.password === password) {
           var responseObject = {};
-
-          responseObject.jwt = createToken(user);
 
           responseObject.user = {
             firstName: user.firstName,
@@ -23,6 +23,8 @@ module.exports.login = function(req, res) {
             emailAddress: user.emailAddress,
             confirmedEmail: user.confirmedEmail
           };
+
+          responseObject.jwt = createToken(responseObject.user);
 
           res.status(200).send(responseObject)
         } else {
@@ -127,6 +129,42 @@ module.exports.requireLogin = function(req, res, next) {
         next(err);
       });
   });
+};
+
+module.exports.validateToken = function(req, res, next) {
+  var token = req.query.token;
+
+  validateToken(token, function(err, user) {
+
+    if (err) {
+      res.status(500).send({message: 'Token could not be validated'});
+      return;
+    }
+
+    User.findOne({emailAddress: user.emailAddress}, fieldsToReturn).exec()
+      .then(function(user) {
+        if (!user) {
+          res.status(401).send({message: 'Token could not be validated'});
+          return;
+        }
+
+        var responseObject = {};
+
+        responseObject.user = {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          emailAddress: user.emailAddress,
+          confirmedEmail: user.confirmedEmail
+        };
+
+        responseObject.jwt = createToken(responseObject.user);
+
+        res.status(200).send(responseObject);
+      })
+      .catch(function(error) {
+        res.status(401).send({message: error});
+      })
+  })
 };
 
 /**

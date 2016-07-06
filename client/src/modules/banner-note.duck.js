@@ -47,7 +47,7 @@ export function hideBannerNote() {
   };
 }
 
-export const bannerNote = (message, duration = 2500, style = 'success') => {
+export const sendBannerNote = (message, duration = 2500, style = 'success') => {
   return (dispatch) => {
     dispatch(showBannerNote(message, style));
     setTimeout(function() {
@@ -56,4 +56,4 @@ export const bannerNote = (message, duration = 2500, style = 'success') => {
   };
 };
 
-export const actions = { bannerNote };
+export const actions = { sendBannerNote };

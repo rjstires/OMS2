@@ -1,7 +1,7 @@
 // authentication.js
 import axios from 'axios';
 import {browserHistory} from 'react-router';
-import {bannerNote} from './banner-note.duck'; //TODO
+import {sendBannerNote} from './banner-note.duck'; //TODO
 import initialState from './initial-state';
 import {actions as registration}from './registration.duck';
 
@@ -15,6 +15,10 @@ const LOG_IN_FAILURE = 'LOG_IN_FAILURE';
 const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST';
 const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
 const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
+
+const VALIDATE_TOKEN_REQUEST = 'VALIDATE_TOKEN_REQUEST';
+const VALIDATE_TOKEN_SUCCESS= 'VALIDATE_TOKEN_SUCCESS';
+const VALIDATE_TOKEN_FAILURE = 'VALIDATE_TOKEN_FAILURE';
 
 /****************************************
  *  Reducer
@@ -98,16 +102,14 @@ export function login(credentials) {
     dispatch(loginRequest(credentials));
     axios.post('http://localhost:4000/login', credentials)
       .then(response => {
-        console.log(response);
         localStorage.setItem('token', response.data.jwt);
         dispatch(loginSuccess());
         dispatch(registration.updateUser(response.data.user));
         browserHistory.push('/');
-        dispatch(bannerNote('Successfully logged in.'));
+        dispatch(sendBannerNote('Successfully logged in.'));
       })
       .catch(error => {
-        console.log(error);
-        dispatch(bannerNote(error.data, 2500, 'error'));
+        dispatch(sendBannerNote(error.data, 2500, 'error'));
         dispatch(loginFailure());
       });
   };
@@ -140,9 +142,10 @@ export function logout() {
 
     const token = localStorage.getItem('token');
     if (!token) {
+      dispatch(registration.removeUser());
       dispatch(logoutSuccess());
       browserHistory.push('/');
-      dispatch(bannerNote('Successfully logged out.'));
+      dispatch(sendBannerNote('Successfully logged out.'));
     } else {
       dispatch(logoutFailure());
     }
@@ -150,4 +153,37 @@ export function logout() {
   };
 }
 
-export const actions = {login, logout};
+export function validateTokenRequest(token) {
+  return {
+    type: VALIDATE_TOKEN_REQUEST,
+    token
+  };
+}
+
+export function validateTokenSuccess() {
+  return {
+    type: VALIDATE_TOKEN_SUCCESS
+  };
+}
+
+export function validateTokenFailure() {
+  return {
+    type: VALIDATE_TOKEN_FAILURE
+  };
+}
+
+export function validateAuthToken(token) {
+  return (dispatch) => {
+    dispatch(validateTokenRequest());
+    axios.get(`http://localhost:4000/validate-token?token=${token}`)
+      .then(function(response) {
+        dispatch(validateTokenSuccess(response));
+        dispatch(registration.updateUser(response.data.user));
+        dispatch(loginSuccess());
+      })
+      .catch(function(response) {
+        dispatch(validateTokenFailure(response));
+      });
+  };
+}
+export const actions = {login, logout, validateAuthToken};
