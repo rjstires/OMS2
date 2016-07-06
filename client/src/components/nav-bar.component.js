@@ -6,7 +6,7 @@ class NavBarContainer extends React.Component {
     return {
       login: PropTypes.func.isRequired,
       logout: PropTypes.func.isRequired,
-      auth: PropTypes.object.isRequired
+      user: PropTypes.object
     };
   }
 
@@ -15,25 +15,25 @@ class NavBarContainer extends React.Component {
   }
 
   loginLink() {
-    if (!this.props.auth.loggedIn) {
+    if (!this.props.user.emailAddress) {
       return (
         <li><Link to='/login'>Login</Link></li>
       );
     }
   }
 
-  registerLink() {
-    if (!this.props.auth.loggedIn) {
+  logoutLink() {
+    if (this.props.user.emailAddress) {
       return (
-        <li><Link to='/register'>Register</Link></li>
+        <li><a href='#' onClick={this.props.logout}>Logout</a></li>
       );
     }
   }
 
-  logoutLink() {
-    if (this.props.auth.loggedIn) {
+  registerLink() {
+    if (!this.props.user.emailAddress) {
       return (
-        <li><a href='#' onClick={this.props.logout}>Logout</a></li>
+        <li><Link to='/register'>Register</Link></li>
       );
     }
   }

@@ -96,8 +96,19 @@ module.exports.confirm = function(req, res) {
       // Update
       user.confirmedEmail = true;
       user.save();
-      res.status(200)
-        .send(`Email ${user.emailAddress} successfully confirmed.`);
+
+      var responseObject = {};
+
+      responseObject.user = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        emailAddress: user.emailAddress,
+        confirmedEmail: user.confirmedEmail
+      };
+
+      responseObject.jwt = createToken(responseObject.user);
+
+      res.status(200).send(responseObject);
     })
     .catch(function(error) {
       res.status(400).send(error);

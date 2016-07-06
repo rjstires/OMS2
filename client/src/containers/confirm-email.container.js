@@ -11,7 +11,7 @@ class ConfirmEmailContainer extends Component {
     const confirmed = props.confirmed;
 
     if(token && !confirmed){
-      props.actions.confirmToken(token);
+      props.actions.confirmEmail(token);
     }
   }
 
@@ -25,8 +25,8 @@ class ConfirmEmailContainer extends Component {
 }
 ConfirmEmailContainer.propTypes = {
   actions: PropTypes.object.isRequired,
-  confirmed: PropTypes.bool.isRequired,
-  loading: PropTypes.bool.isRequired
+  loading: PropTypes.bool.isRequired,
+  confirmed: PropTypes.bool
 };
 
 function mapStateToProps (state) {

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {actions} from '../modules/authentication.duck';
+import {actions} from '../modules/registration.duck';
 import LoginForm from '../components/login-form.component';
 
 export const LoginPage = (props) => {
@@ -10,7 +10,7 @@ export const LoginPage = (props) => {
       <div className='col m12'>
         <LoginForm
           login={props.actions.login}
-          authenticated={props.authenticated}
+          user={props.user}
         />
       </div>
     </div>
@@ -19,12 +19,12 @@ export const LoginPage = (props) => {
 
 LoginPage.propTypes = {
   actions: PropTypes.object.isRequired,
-  authenticated: PropTypes.object.isRequired
+  user: PropTypes.object
 };
 
 function mapStateToProps(state) {
   return {
-    authenticated: state.authenticated
+    user: state.registration.user
   };
 }
 

@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {actions} from '../modules/authentication.duck';
+import {actions} from '../modules/registration.duck';
 import NavBar from '../components/nav-bar.component';
 
 export const NavBarContainer = (props) => {
   return (
     <NavBar
-      auth={props.authenticate}
+      user={props.user}
       login={props.actions.login}
       logout={props.actions.logout}
     />
@@ -16,12 +16,12 @@ export const NavBarContainer = (props) => {
 
 NavBarContainer.propTypes = {
   actions: PropTypes.object.isRequired,
-  authenticate: PropTypes.object.isRequired
+  user: PropTypes.object
 };
 
 function mapStateToProps(state) {
   return {
-    authenticate: state.authenticated
+    user: state.registration.user
   };
 }
 

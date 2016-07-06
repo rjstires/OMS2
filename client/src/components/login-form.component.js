@@ -11,7 +11,8 @@ class LoginForm extends Component {
     return {
       login: PropTypes.func.isRequired,
       fields: PropTypes.object.isRequired,
-      authenticated: PropTypes.object.isRequired,
+      user: PropTypes.object,
+      loading: PropTypes.bool,
       handleSubmit: PropTypes.func.isRequired
     };
   }
@@ -22,7 +23,7 @@ class LoginForm extends Component {
 
   render() {
     const {fields: {emailAddress, password}, handleSubmit} = this.props;
-    if (this.props.authenticated.loading) {
+    if (this.props.loading) {
       return (
         <LoadingComponent />
       );

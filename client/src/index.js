@@ -6,7 +6,7 @@ import {Provider} from 'react-redux';
 import {Router, browserHistory} from 'react-router';
 import routes from './routes';
 import configureStore from './store/configureStore';
-import {validateAuthToken} from './modules/authentication.duck';
+import {validateJWT} from './modules/registration.duck';
 
 // Misc.
 require('./favicon.ico'); // Tell webpack to load favicon.ico
@@ -25,7 +25,7 @@ const store = configureStore();
 const token = localStorage.getItem('token');
 if (token) {
   // Need to validate the token here
-  store.dispatch(validateAuthToken(token));
+  store.dispatch(validateJWT(token));
 }
 
 render(

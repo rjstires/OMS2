@@ -1,12 +1,13 @@
 export default {
-  authenticated: {
-    loggedIn: false,
-    loading: false
-  },
 
   registration: {
     loading: false,
-    user: null
+    user: {
+      firstName: null,
+      lastName: null,
+      emailAddress: null,
+      emailConfirmed: null
+    }
   },
 
   bannerNote: {
