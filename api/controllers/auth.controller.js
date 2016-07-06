@@ -97,6 +97,7 @@ module.exports.confirm = function(req, res) {
       user.confirmedEmail = true;
       user.save();
 
+      // TODO Extract response to reusable function!!
       var responseObject = {};
 
       responseObject.user = {
