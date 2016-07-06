@@ -1,6 +1,5 @@
-import React, { PropTypes } from 'react';
+import React, {PropTypes} from 'react';
 import NavBarContainer from '../containers/nav-bar.container'; // eslint-disable-line import/no-named-as-default
-import BannerNoteContainer from '../containers/banner-note.container'; // eslint-disable-line import/no-named-as-default
 
 const App = (props) => {
   return (
@@ -10,7 +9,6 @@ const App = (props) => {
       <div className='row col m12'>
         {props.children}
       </div>
-      <BannerNoteContainer />
     </div>
   );
 };

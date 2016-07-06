@@ -1,8 +1,8 @@
 // registration.js
 import axios from 'axios';
 import {browserHistory} from 'react-router';
-import {sendBannerNote} from './banner-note.duck';
 import initialState from './initial-state';
+import {Toast} from '../utilities';
 
 /****************************************
  *  Constants
@@ -169,11 +169,11 @@ export function registerUser(credentials) {
       .then(() => {
         browserHistory.push('/');
         dispatch(registerSuccess());
-        dispatch(sendBannerNote('Successfully registered, please login.', 2500));
+        Toast.success('Successfully registered. Please check your email.');
       })
       .catch((response) => {
         dispatch(registerFailure());
-        dispatch(sendBannerNote(response.data.message, 2500, 'error'));
+        Toast.error(response.data.message);
       });
   };
 }
@@ -207,6 +207,8 @@ export function confirmEmail(token) {
     axios.get(`http://localhost:4000/confirm?token=${token}`)
       .then(function(response) {
         // TODO Forward user to index and send banner note.
+        Toast.success('Thank you for confirming your email address');
+        Toast.info('You`ve been automatically logged in.');
         dispatch(loginSuccess(response.data.user, response.data.jwt));
       })
       .catch(function(error) {
@@ -248,10 +250,10 @@ export function login(credentials) {
       .then(response => {
         dispatch(loginSuccess(response.data.user));
         browserHistory.push('/');
-        dispatch(sendBannerNote('Successfully logged in.'));
+        Toast.success('Successfully logged in.');
       })
       .catch(error => {
-        dispatch(sendBannerNote(error.data, 2500, 'error'));
+        Toast.error(error.data);
         dispatch(loginFailure());
       });
   };
@@ -283,7 +285,7 @@ export function logout() {
     localStorage.removeItem('token');
     dispatch(logoutSuccess());
     browserHistory.push('/');
-    dispatch(sendBannerNote('Successfully logged out.'));
+    Toast.success('Successfully logged out.');
   };
 }
 

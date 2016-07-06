@@ -28,3 +28,33 @@
     background-color: #ef9a9a;
   }
 }
+
+#toast-container {
+  top: auto !important;;
+  right: auto !important;
+  max-width: 100%;
+  left: 5%;
+  width: 90%;
+  bottom: 1%;
+
+  > div {
+    width: 100%;
+  }
+}
+
+.toast {
+  border-radius: 6px;
+
+  &.info {
+    background-color: #90caf9;
+  }
+  &.success {
+    background-color: #a5d6a7;
+  }
+  &.warning {
+    background-color: #ffcc80;
+  }
+  &.error {
+    background-color: #ef9a9a;
+  }
+}

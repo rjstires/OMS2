@@ -1,5 +1,4 @@
 export default {
-
   registration: {
     loading: false,
     user: {
@@ -8,10 +7,5 @@ export default {
       emailAddress: null,
       emailConfirmed: null
     }
-  },
-
-  bannerNote: {
-    message: null,
-    style: null
   }
 };
