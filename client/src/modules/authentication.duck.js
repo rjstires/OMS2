@@ -153,6 +153,7 @@ export function logout() {
   };
 }
 
+// Validate JWT
 export function validateTokenRequest(token) {
   return {
     type: VALIDATE_TOKEN_REQUEST,
@@ -182,8 +183,10 @@ export function validateAuthToken(token) {
         dispatch(loginSuccess());
       })
       .catch(function(response) {
+        localStorage.removeItem('token');
         dispatch(validateTokenFailure(response));
       });
   };
 }
+
 export const actions = {login, logout, validateAuthToken};
