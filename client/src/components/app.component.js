@@ -5,8 +5,7 @@ const App = (props) => {
   return (
     <div>
       <NavBarContainer />
-      <br/>
-      <div className='row col m12'>
+      <div className='row col m12' id='mainContainer'>
         {props.children}
       </div>
     </div>

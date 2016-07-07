@@ -33,13 +33,12 @@ class Input extends Component {
       invalid: (formObject.touched && formObject.error)
     });
 
-    const columnClass = 'col ' + this.getColWidth();
+    const columnClass = 'col input-field ' + this.getColWidth();
 
     return (
       <div className={columnClass}>
         <label htmlFor={name}>{label}</label>
-        <input placeholder={placeholder}
-               name={name}
+        <input name={name}
                ref={name}
                type={type}
                className={inputClassName}

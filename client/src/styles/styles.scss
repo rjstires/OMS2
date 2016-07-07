@@ -1,41 +1,16 @@
 .form-error {
   color: #ef9a9a;
 }
-
-.banner-note {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  min-height: 50px;
-  border-radius: 3px;
-  padding: 6px;
-
-  div {
-    width: 100%;
-  }
-
-  &.success {
-    background-color: #a5d6a7;
-    color: #fff;
-  }
-  &.info {
-    background-color: #90caf9;
-  }
-  &.debug {
-    background-color: #fff59d;
-  }
-  &.error {
-    background-color: #ef9a9a;
-  }
+#mainContainer {
+  margin-top: 60px;
 }
 
 #toast-container {
-  top: auto !important;;
+  top: 74px !important;;
   right: auto !important;
   max-width: 100%;
   left: 5%;
   width: 90%;
-  bottom: 1%;
 
   > div {
     width: 100%;

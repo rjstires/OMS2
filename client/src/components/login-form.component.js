@@ -30,16 +30,20 @@ class LoginForm extends Component {
     }
 
     return (
-      <div className='col m4 offset-m4'>
+      <div className='col m4 offset-m4 z-depth-1'>
         <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}
               noValidate>
-
+          <div className='section'>
+            <h5>Login</h5>
+          </div>
+          <div className='divider'></div>
           <Input
             formObject={emailAddress}
             name='emailAddress'
             label='Email Address'
             placeholder='Enter your email address.'
           />
+
           <Input
             formObject={password}
             name='password'
@@ -48,8 +52,7 @@ class LoginForm extends Component {
             placeholder='Enter your password.'
           />
 
-
-          <div className='row div col m12'>
+          <div className='row div col m12 right-align'>
             <button
               className='btn waves-effect waves-light'
               type='submit'
