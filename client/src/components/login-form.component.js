@@ -1,9 +1,9 @@
-import React, {PropTypes, Component} from 'react';
-import {reduxForm} from 'redux-form';
-import LoadingComponent from './loading.component';
-import Input from './form/input.component';
+import React, {PropTypes, Component} from "react";
+import {reduxForm} from "redux-form";
+import LoadingComponent from "./loading.component";
+import Input from "./form/input.component";
 
-export const fields = ['emailAddress', 'password'];
+export const fields = ["emailAddress", "password"];
 
 class LoginForm extends Component {
 
@@ -30,36 +30,61 @@ class LoginForm extends Component {
     }
 
     return (
-      <div className='col m4 offset-m4 z-depth-1'>
+      <div className="col m3 offset-m5 z-depth-1 login-form">
         <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}
               noValidate>
-          <div className='section'>
+
+          <div className="section">
             <h5>Login</h5>
+            <p>Enter your credentials to login</p>
           </div>
-          <div className='divider'></div>
-          <Input
-            formObject={emailAddress}
-            name='emailAddress'
-            label='Email Address'
-            placeholder='Enter your email address.'
-          />
+          <div className="divider"></div>
 
-          <Input
-            formObject={password}
-            name='password'
-            label='Password'
-            type='password'
-            placeholder='Enter your password.'
-          />
+          <div className="row shallow">
+            <div className="col s12 m12 l12">
+              <Input
+                formObject={emailAddress}
+                name="emailAddress"
+                label="Email Address"
+                type="email"
+                icon="email"
+              />
+            </div>
+          </div>
 
-          <div className='row div col m12 right-align'>
-            <button
-              className='btn waves-effect waves-light'
-              type='submit'
-              name='action'>
-              Submit
-              <i className='material-icons right'>send</i>
-            </button>
+          <div className="row shallow">
+            <div className="col s12 m12 l12">
+              <Input
+                formObject={password}
+                name="password"
+                label="Password"
+                type="password"
+                icon="lock_outline"
+              />
+            </div>
+          </div>
+
+
+          <div className="row">
+            <div className=" col s12 m12 l12 input-field">
+              <input type="checkbox" id="rememberMe" name="rememberMe"/>
+              <label htmlFor="rememberMe">Remember Me</label>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="input-field col s12">
+              <a
+                className="btn waves-effect waves-light col s12"
+                type="submit"
+                name="action">
+                Submit
+              </a>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col s6 m6 l6"><a href="#">Register!</a></div>
+            <div className="col s6 m6 l6"><a href="#">Forgot Password</a></div>
           </div>
         </form>
       </div>
@@ -71,17 +96,17 @@ const validate = values => {
   const errors = {};
 
   if (!values.emailAddress) {
-    errors.emailAddress = 'Enter an email address to continue.';
+    errors.emailAddress = "Enter an email address to continue.";
   }
 
   if (!values.password) {
-    errors.password = 'Enter a password to continue.';
+    errors.password = "Enter a password to continue.";
   }
   return errors;
 };
 
 export default reduxForm({
-  form: 'login',
+  form: "login",
   fields,
   validate
 })(LoginForm);

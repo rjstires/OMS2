@@ -1,5 +1,5 @@
-import React, {PropTypes} from 'react';
-import {Link} from 'react-router';
+import React, {PropTypes} from "react";
+import {Link} from "react-router";
 
 class NavBarContainer extends React.Component {
   static propTypes() {
@@ -17,7 +17,7 @@ class NavBarContainer extends React.Component {
   loginLink() {
     if (!this.props.user.emailAddress) {
       return (
-        <li><Link to='/login'>Login</Link></li>
+        <li><Link to="/login">Login</Link></li>
       );
     }
   }
@@ -25,7 +25,7 @@ class NavBarContainer extends React.Component {
   logoutLink() {
     if (this.props.user.emailAddress) {
       return (
-        <li><a href='#' onClick={this.props.logout}>Logout</a></li>
+        <li><a href="#" onClick={this.props.logout}>Logout</a></li>
       );
     }
   }
@@ -33,7 +33,7 @@ class NavBarContainer extends React.Component {
   registerLink() {
     if (!this.props.user.emailAddress) {
       return (
-        <li><Link to='/register'>Register</Link></li>
+        <li><Link to="/register">Register</Link></li>
       );
     }
   }
@@ -41,9 +41,9 @@ class NavBarContainer extends React.Component {
   render() {
     return (
       <nav>
-        <div className='nav-wrapper'>
-          <a href='#' className='brand-logo'>Logo</a>
-          <ul id='nav-mobile' className='right hide-on-med-and-down'>
+        <div className="nav-wrapper">
+          <a href="#" className="brand-logo">Logo</a>
+          <ul id="nav-mobile" className="right hide-on-med-and-down">
             {this.loginLink()}
             {this.registerLink()}
             {this.logoutLink()}

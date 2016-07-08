@@ -10,11 +10,11 @@
     "open:src": "babel-node tools/srcServer.js",
     "open:dist": "babel-node tools/distServer.js",
     "lint": "esw webpack.config.* src tools",
-    "lint:watch": "npm run lint -- --watch",
+    "lint:watch": "npm run lint -- --watch --fix",
     "clean-dist": "npm run remove-dist && mkdir dist",
     "remove-dist": "rimraf ./dist",
     "build:html": "babel-node tools/buildHtml.js",
-    "prebuild": "npm run clean-dist && npm run build:html && npm run lint",
+    "prebuild": "npm run clean-dist && npm run build:html && npm run lint --fix",
     "build": "babel-node tools/build.js && npm run open:dist"
   },
   "author": "Cory House",
