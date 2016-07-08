@@ -2,6 +2,7 @@ import React, {PropTypes, Component} from "react";
 import {reduxForm} from "redux-form";
 import LoadingComponent from "./loading.component";
 import Input from "./form/input.component";
+import {Link} from "react-router";
 
 export const fields = ["emailAddress", "password"];
 
@@ -74,17 +75,17 @@ class LoginForm extends Component {
 
           <div className="row">
             <div className="input-field col s12">
-              <a
+              <button
                 className="btn waves-effect waves-light col s12"
                 type="submit"
                 name="action">
                 Submit
-              </a>
+              </button>
             </div>
           </div>
           <div className="row">
-            <div className="col s6 m6 l6"><a href="#">Register!</a></div>
-            <div className="col s6 m6 l6"><a href="#">Forgot Password</a></div>
+            <div className="col s6 m6 l6"><Link to="/register">Register!</Link></div>
+            <div className="col s6 m6 l6"><Link to="/forgot-password">Forgot password?</Link></div>
           </div>
         </form>
       </div>
