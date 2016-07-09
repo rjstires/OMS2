@@ -241,7 +241,7 @@ export function login(credentials) {
     // TODO Extract link to config file.
     axios.post("http://localhost:4000/login", credentials)
       .then(response => {
-        dispatch(loginSuccess(response.data.user));
+        dispatch(loginSuccess(response.data.user, response.data.jwt));
         browserHistory.push("/");
         Toast.success("Successfully logged in.");
       })

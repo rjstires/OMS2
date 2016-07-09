@@ -1,21 +1,21 @@
-var mongoose = require('mongoose');
-var utilities = require('../utilities/index');
-var Schema = mongoose.Schema;
+const mongoose = require("mongoose");
+const utilities = require("../utilities/index");
+const Schema = mongoose.Schema;
 
 // Validations
-var namePattern = /^[a-z ,.'-]+$/i;
-var emailPattern = /\S+@\S+\.\S+/;
-var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&])[A-Za-z\d$@!%*?&]{8,22}/; // eslint-disable-line max-len
+const namePattern = /^[a-z ,.'-]+$/i;
+const emailPattern = /\S+@\S+\.\S+/;
+const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&])[A-Za-z\d$@!%*?&]{8,22}/; // eslint-disable-line max-len
 
 // Error messages
-mongoose.Error.messages.String.required = '{PATH} must be set.';
+mongoose.Error.messages.String.required = "{PATH} must be set.";
 
-var userContactSchema = new Schema({
+const userContactSchema = new Schema({
   contactType: String,
   value: String
 });
 
-var userSchema = new Schema({
+const userSchema = new Schema({
   firstName: {type: String, required: true, match: namePattern},
   lastName: {type: String, required: true, match: namePattern},
   emailAddress: {
@@ -30,13 +30,19 @@ var userSchema = new Schema({
   createdOn: {type: Date, default: Date.now()},
   confirmedEmail: {type: Boolean, default: false},
   confirmationToken: {type: String},
+  forgotPasswordToken: {type: String},
   contacts: [userContactSchema]
 });
 
-userSchema.pre('save', function(next) {
+userSchema.pre("save", function(next) {
   this.confirmationToken = this.confirmationToken || utilities.stringGen(40);
   next();
 });
 
-module.exports.UserContact = mongoose.model('UserContact', userContactSchema);
-module.exports.User = mongoose.model('User', userSchema);
+userSchema.methods.generateForgotPasswordToken = function() {
+  this.forgotPasswordToken = utilities.createToken({exp: (new Date().getTime() + 60 * 60 * 24), email: this.emailAddress});
+  this.save();
+};
+
+module.exports.UserContact = mongoose.model("UserContact", userContactSchema);
+module.exports.User = mongoose.model("User", userSchema);

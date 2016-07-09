@@ -84,8 +84,8 @@ class LoginForm extends Component {
             </div>
           </div>
           <div className="row">
-            <div className="col s6 m6 l6"><Link to="/register">Register!</Link></div>
-            <div className="col s6 m6 l6"><Link to="/forgot-password">Forgot password?</Link></div>
+            <div className="col s6 m6 l6 center-align"><Link to="/register">Register!</Link></div>
+            <div className="col s6 m6 l6 center-align"><Link to="/forgot-password">Forgot password?</Link></div>
           </div>
         </form>
       </div>

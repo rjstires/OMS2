@@ -1,11 +1,11 @@
-var User = require('../models/user.model').User;
-var _ = require('lodash');
+var User = require("../models/user.model").User;
+var _ = require("lodash");
 
 var messages = {
-  emptyTable: 'There are no users.',
-  unableToLocate: 'Unable to locate user.',
+  emptyTable: "There are no users.",
+  unableToLocate: "Unable to locate user.",
   userDeleted: function(user) {
-    return user + ' has been deleted';
+    return user + " has been deleted";
   }
 };
 
@@ -28,7 +28,7 @@ module.exports.create = function(req, res) {
 
 module.exports.list = function(req, res) {
   User.find({})
-    .sort({lastName: 'desc', firstName: 'desc'})
+    .sort({lastName: "desc", firstName: "desc"})
     .exec()
     .then(function(users) {
       if (users) {
@@ -82,7 +82,7 @@ module.exports.updateOne = function(req, res) {
               res.status(201).send(updatedUser);
             } else {
               res.status(400)
-                .send({message: 'Unable to locate user.'});
+                .send({message: "Unable to locate user."});
             }
           })
           .catch(function(error) {
