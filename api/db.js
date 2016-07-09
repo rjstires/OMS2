@@ -1,6 +1,12 @@
-var config = require("./config.js");
-var mongoose = require("mongoose");
+const config = require("./config.js");
+const Sequelize = require("sequelize");
 
-module.exports = function() {
-  return mongoose.connect(config.db.link);
+const params = {
+  host: config.db.host,
+  dialect: "postgres"
 };
+
+const connection = new Sequelize(config.db.name, config.db.user, config.db.password, params);
+
+module.exports = connection;
+

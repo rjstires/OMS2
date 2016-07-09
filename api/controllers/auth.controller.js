@@ -1,37 +1,20 @@
 const config = require("../config");
-const User = require("../models/user.model").User;
+const User = require("../models/user.model");
 const sendMail = require("../utilities/sendMail");
 const utilities = require("../utilities");
-
-const fieldsToReturn = "firstName lastName emailAddress confirmedEmail password";
 
 module.exports.login = function(req, res) {
   const emailAddress = req.body.emailAddress.toLocaleLowerCase();
   const password = req.body.password;
 
-  User.findOne({emailAddress: emailAddress}, fieldsToReturn)
-    .exec()
+  User.findOne({where: {emailAddress: emailAddress}})
     .then(function(user) {
-      if (user) {
-        if (user.password === password) {
-          const responseObject = {};
-
-          responseObject.user = {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            emailAddress: user.emailAddress,
-            confirmedEmail: user.confirmedEmail
-          };
-
-          responseObject.jwt = utilities.createToken(responseObject.user);
-
-          res.status(200).send(responseObject);
-        } else {
-          res.status(401).send("Invalid credentials.");
-        }
-      } else {
-        res.status(401).send("Invalid credentials.");
+      if (!user || !user.validatePassword(password)) {
+        res.status(401).send({message: "Invalid credentials"});
+        return;
       }
+
+      res.status(200).send(createResponseObject(User.dataValues));
     })
     .catch(function(response) {
       res.status(500).send(response);
@@ -39,41 +22,27 @@ module.exports.login = function(req, res) {
 };
 
 module.exports.register = function(req, res) {
-  const user = new User({
+  const user = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     emailAddress: req.body.emailAddress,
     password: req.body.password
-  });
+  };
 
-  user.save()
+  User.create(user)
     .then(function(user) {
 
-      // Send email confirmation.
-      sendMail.confirmAccount(
-        `${user.firstName} ${user.lastName}`,
-        user.emailAddress,
-        `${config.paths.root}/confirm?token=${user.confirmationToken}`
-      );
+      const fullName = `${user.dataValues.firstName} ${user.dataValues.lastName}`;
+      const emailAddres = user.dataValues.emailAddress;
+      const confirmationURL = `${config.paths.root}/confirm?token=${user.dataValues.confirmationToken}`;
+      sendMail.confirmAccount(fullName, emailAddres, confirmationURL);
 
       // Send user token.
-      res.status(200).send(user);
+      res.status(200).send(createResponseObject(user.dataValues));
     })
+
     .catch(function(error) {
-      let message;
-
-      switch (error.code) {
-        case 11000:
-          message = "A user with that email address already exists.";
-          break;
-        case 11001:
-          message = "A user with that email address already exists.";
-          break;
-        default:
-          message = "Unable to register user.";
-      }
-
-      res.status(422).send({message});
+      res.status(422).send({message: error});
     });
 };
 
@@ -85,7 +54,7 @@ module.exports.confirm = function(req, res) {
     res.status(400).send({message: "A token is required"});
   }
 
-  User.findOne({confirmationToken: token}).exec()
+  User.findOne({where: {confirmationToken: token}})
     .then(function(user) {
       if (!user) {
         res.status(400).send({message: "Token could not be validated."});
@@ -94,53 +63,44 @@ module.exports.confirm = function(req, res) {
 
       // Update
       user.confirmedEmail = true;
-      user.save();
-
-      // TODO Extract response to reusable function!!
-      const responseObject = {};
-
-      responseObject.user = {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        emailAddress: user.emailAddress,
-        confirmedEmail: user.confirmedEmail
-      };
-
-      responseObject.jwt = utilities.createToken(responseObject.user);
-
-      res.status(200).send(responseObject);
+      user.save()
+        .then(function(user) {
+          res.status(200).send(createResponseObject(user.dataValues));
+        })
+        .catch(function(error) {
+          res.status(400).send(error);
+        });
     })
     .catch(function(error) {
       res.status(400).send(error);
-    })
-    .done();
+    });
 };
 
-module.exports.requireLogin = function(req, res, next) {
-  const token = req.header("Authorization");
-
-  if (!token) {
-    denyRequest(res);
-  }
-
-  utilities.validateToken(token, function(err, user) {
-    if (err) {
-      denyRequest(res);
-    }
-
-    User.findById(user._id)
-      .then(function(user) {
-        if (user) {
-          res.locals.token = token;
-          res.locals.user = user;
-          next();
-        }
-      })
-      .catch(function(err) {
-        next(err);
-      });
-  });
-};
+// module.exports.requireLogin = function(req, res, next) {
+//   const token = req.header("Authorization");
+//
+//   if (!token) {
+//     denyRequest(res);
+//   }
+//
+//   utilities.validateToken(token, function(err, user) {
+//     if (err) {
+//       denyRequest(res);
+//     }
+//
+//     User.findById(user._id)
+//       .then(function(user) {
+//         if (user) {
+//           res.locals.token = token;
+//           res.locals.user = user;
+//           next();
+//         }
+//       })
+//       .catch(function(err) {
+//         next(err);
+//       });
+//   });
+// };
 
 module.exports.validateToken = function(req, res) {
   const token = req.query.token;
@@ -152,25 +112,14 @@ module.exports.validateToken = function(req, res) {
       return;
     }
 
-    User.findOne({emailAddress: user.emailAddress}, fieldsToReturn).exec()
+    User.findOne({emailAddress: user.emailAddress}).exec()
       .then(function(user) {
         if (!user) {
           res.status(401).send({message: "Token could not be validated"});
           return;
         }
 
-        const responseObject = {};
-
-        responseObject.user = {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          emailAddress: user.emailAddress,
-          confirmedEmail: user.confirmedEmail
-        };
-
-        responseObject.jwt = token;
-
-        res.status(200).send(responseObject);
+        res.status(200).send(createResponseObject(user.dataValues));
       })
       .catch(function(error) {
         res.status(401).send({message: error});
@@ -178,13 +127,17 @@ module.exports.validateToken = function(req, res) {
   });
 };
 
-/**
- * Uniform 401 response function.
- * @param {object} response - ExpressJS response object.
- */
-function denyRequest(response) {
-  response.status(401).send({
-    message: "Unable to verify authentication."
-  });
-}
+function createResponseObject(user) {
+  const responseObject = {};
 
+  responseObject.user = {
+    firstName: user.firstName,
+    lastName: user.lastName,
+    emailAddress: user.emailAddress,
+    confirmedEmail: user.confirmedEmail
+  };
+
+  responseObject.jwt = utilities.createToken(responseObject.user);
+
+  return responseObject;
+}

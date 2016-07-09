@@ -1,15 +1,15 @@
 "use strict";
 
-var values = {
+const values = {
   paths: {
     root: "http://localhost:3000"
   },
   db: {
-    host: process.env.dbHost || "ds013192.mlab.com",
-    port: process.env.dbPort || 13192,
-    name: process.env.dbName ||"boostingedge",
-    user: process.env.dbUser || "level1",
-    password: process.env.dbPassword || "password123"
+    host: process.env.dbHost || "localhost",
+    port: process.env.dbPort || 5433,
+    name: process.env.dbName ||"oms_test",
+    user: process.env.dbUser || "postgres",
+    password: process.env.dbPassword || "Password1!"
   },
 
   sendMail: {
