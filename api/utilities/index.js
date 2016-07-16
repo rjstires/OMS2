@@ -1,6 +1,6 @@
-const jwt = require("jwt-simple");
-const _ = require("lodash");
-const config = require("../config");
+const jwt = require('jwt-simple');
+const _ = require('lodash');
+const config = require('../config');
 
 /**
  * Generate a random string to the size of length.
@@ -9,9 +9,9 @@ const config = require("../config");
  */
 const stringGen = function(length) {
   length = length || 20;
-  let text = " ";
+  let text = ' ';
 
-  const charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
   for (let i = 0; i < length; i++) {
     text += charset.charAt(Math.floor(Math.random() * charset.length));
@@ -55,7 +55,7 @@ const validateToken = function(token, callback) {
     callback(null, decoded);
     const curr = new Date().getTime() / 1000;
     if (decoded.exp < curr){
-      callback("Expired token.", null);
+      callback('Expired token.', null);
     }
   } catch (e) {
     callback(e, null);

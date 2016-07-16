@@ -1,31 +1,31 @@
 // registration.js
-import axios from "axios";
-import {browserHistory} from "react-router";
-import initialState from "./initial-state";
-import {Toast} from "../utilities";
+import axios from 'axios';
+import {browserHistory} from 'react-router';
+import initialState from './initial-state';
+import {Toast} from '../utilities';
 
 /****************************************
  *  Constants
  ****************************************/
-const LOG_IN_REQUEST = "LOG_IN_REQUEST";
-const LOG_IN_SUCCESS = "LOG_IN_SUCCESS";
-const LOG_IN_FAILURE = "LOG_IN_FAILURE";
+const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
+const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
+const LOG_IN_FAILURE = 'LOG_IN_FAILURE';
 
-const LOG_OUT_REQUEST = "LOG_OUT_REQUEST";
-const LOG_OUT_SUCCESS = "LOG_OUT_SUCCESS";
-const LOG_OUT_FAILURE = "LOG_OUT_FAILURE";
+const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST';
+const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
+const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
 
-const REGISTER_REQUEST = "REGISTER_REQUEST";
-const REGISTER_SUCCESS = "REGISTER_SUCCESS";
-const REGISTER_FAILURE = "REGISTER_FAILURE";
+const REGISTER_REQUEST = 'REGISTER_REQUEST';
+const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
+const REGISTER_FAILURE = 'REGISTER_FAILURE';
 
-const VALIDATE_TOKEN_REQUEST = "VALIDATE_TOKEN_REQUEST";
-const VALIDATE_TOKEN_SUCCESS = "VALIDATE_TOKEN_SUCCESS";
-const VALIDATE_TOKEN_FAILURE = "VALIDATE_TOKEN_FAILURE";
+const VALIDATE_TOKEN_REQUEST = 'VALIDATE_TOKEN_REQUEST';
+const VALIDATE_TOKEN_SUCCESS = 'VALIDATE_TOKEN_SUCCESS';
+const VALIDATE_TOKEN_FAILURE = 'VALIDATE_TOKEN_FAILURE';
 
-const VALIDATION_JWT_REQUEST = "VALIDATION_JWT_REQUEST";
-const VALIDATE_JWT_SUCCESS = "VALIDATE_JWT_SUCCESS";
-const VALIDATE_JWT_FAILURE = "VALIDATE_JWT_FAILURE";
+const VALIDATION_JWT_REQUEST = 'VALIDATION_JWT_REQUEST';
+const VALIDATE_JWT_SUCCESS = 'VALIDATE_JWT_SUCCESS';
+const VALIDATE_JWT_FAILURE = 'VALIDATE_JWT_FAILURE';
 
 /****************************************
  *  Reducer
@@ -165,11 +165,11 @@ export function registerFailure() {
 export function registerUser(credentials) {
   return (dispatch) => {
     dispatch(registerRequest(credentials));
-    axios.post("http://localhost:4000/register", credentials)
+    axios.post('http://localhost:4000/register', credentials)
       .then(() => {
-        browserHistory.push("/");
+        browserHistory.push('/');
         dispatch(registerSuccess());
-        Toast.success("Successfully registered. Please check your email.");
+        Toast.success('Successfully registered. Please check your email.');
       })
       .catch((response) => {
         dispatch(registerFailure());
@@ -200,8 +200,8 @@ export function confirmEmail(token) {
     axios.get(`http://localhost:4000/confirm?token=${token}`)
       .then(function(response) {
         // TODO Forward user to index and send banner note.
-        Toast.success("Thank you for confirming your email address");
-        Toast.info("You`ve been automatically logged in.");
+        Toast.success('Thank you for confirming your email address');
+        Toast.info('You`ve been automatically logged in.');
         dispatch(loginSuccess(response.data.user, response.data.jwt));
       })
       .catch(function(error) {
@@ -221,7 +221,7 @@ export function loginRequest(credentials) {
 export function loginSuccess(user, token) {
 
   // Save token
-  localStorage.setItem("token", token);
+  localStorage.setItem('token', token);
 
   return {
     type: LOG_IN_SUCCESS,
@@ -239,11 +239,12 @@ export function login(credentials) {
   return function(dispatch) {
     dispatch(loginRequest(credentials));
     // TODO Extract link to config file.
-    axios.post("http://localhost:4000/login", credentials)
+    axios.post('http://localhost:4000/login', credentials)
       .then(response => {
+        console.log(response);
         dispatch(loginSuccess(response.data.user, response.data.jwt));
-        browserHistory.push("/");
-        Toast.success("Successfully logged in.");
+        browserHistory.push('/');
+        Toast.success('Successfully logged in.');
       })
       .catch(error => {
         Toast.error(error.data);
@@ -269,10 +270,10 @@ export function logout() {
   return function(dispatch) {
     dispatch(logoutRequest());
 
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
     dispatch(logoutSuccess());
-    browserHistory.push("/");
-    Toast.success("Successfully logged out.");
+    browserHistory.push('/');
+    Toast.success('Successfully logged out.');
   };
 }
 
@@ -299,7 +300,7 @@ export function validateJWT(token) {
         dispatch(loginSuccess(response.data.user, response.data.jwt));
       })
       .catch(function(response) {
-        localStorage.removeItem("token");
+        localStorage.removeItem('token');
         dispatch(validateJWTFailure(response));
       });
   };

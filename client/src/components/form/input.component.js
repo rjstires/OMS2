@@ -1,4 +1,4 @@
-import React, {PropTypes, Component} from "react";
+import React, {PropTypes, Component} from 'react';
 
 class Input extends Component {
   static propTypes() {
@@ -27,7 +27,7 @@ class Input extends Component {
   }
 
   render() {
-    const type = this.props.type || "text";
+    const type = this.props.type || 'text';
     const formObject = this.props.formObject;
     const name = this.props.name;
     const label = this.props.label;

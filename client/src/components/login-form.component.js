@@ -1,10 +1,10 @@
-import React, {PropTypes, Component} from "react";
-import {reduxForm} from "redux-form";
-import LoadingComponent from "./loading.component";
-import Input from "./form/input.component";
-import {Link} from "react-router";
+import React, {PropTypes, Component} from 'react';
+import {reduxForm} from 'redux-form';
+import LoadingComponent from './loading.component';
+import Input from './form/input.component';
+import {Link} from 'react-router';
 
-export const fields = ["emailAddress", "password"];
+export const fields = ['emailAddress', 'password'];
 
 class LoginForm extends Component {
 
@@ -97,17 +97,17 @@ const validate = values => {
   const errors = {};
 
   if (!values.emailAddress) {
-    errors.emailAddress = "Enter an email address to continue.";
+    errors.emailAddress = 'Enter an email address to continue.';
   }
 
   if (!values.password) {
-    errors.password = "Enter a password to continue.";
+    errors.password = 'Enter a password to continue.';
   }
   return errors;
 };
 
 export default reduxForm({
-  form: "login",
+  form: 'login',
   fields,
   validate
 })(LoginForm);

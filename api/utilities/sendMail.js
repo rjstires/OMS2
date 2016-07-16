@@ -1,10 +1,10 @@
-var config = require("../config");
-var mandrill = require("mandrill-api/mandrill");
-var mandrill_client = new mandrill.Mandrill("5RfVJQ-d5MZ7iP93pg4E6Q");
+var config = require('../config');
+var mandrill = require('mandrill-api/mandrill');
+var mandrill_client = new mandrill.Mandrill('5RfVJQ-d5MZ7iP93pg4E6Q');
 
 var defaultMessageParams = {
-  from_email: "noreply@boostingedge.com",
-  from_name: "Jarvis Dredsen"
+  from_email: 'noreply@boostingedge.com',
+  from_name: 'Jarvis Dredsen'
 };
 
 /**
@@ -16,13 +16,13 @@ var defaultMessageParams = {
  */
 var confirmAccount = function(name, emailAddress, confirmationURL) {
   var params = {};
-  params.template_name = "new_user_registration";
+  params.template_name = 'new_user_registration';
 
   params.template_content = [];
 
   params.message = Object.assign({}, defaultMessageParams, {
 
-    subject: "Welcome to Boosting Edge, LLC",
+    subject: 'Welcome to Boosting Edge, LLC',
 
     to: [{
       email: emailAddress
@@ -31,8 +31,8 @@ var confirmAccount = function(name, emailAddress, confirmationURL) {
     merge_vars: [{
       rcpt: emailAddress,
       vars: [
-        {name: "USER_NAME", content: name},
-        {name: "CONFIRMATION_URL", content: confirmationURL}
+        {name: 'USER_NAME', content: name},
+        {name: 'CONFIRMATION_URL', content: confirmationURL}
       ]
     }]
   });

@@ -1,7 +1,7 @@
-import React, {PropTypes, Component} from "react";
-import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
-import {actions} from "../modules/registration.duck";
+import React, {PropTypes, Component} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {actions} from '../modules/registration.duck';
 
 class ConfirmEmailContainer extends Component {
   constructor(props, context) {

@@ -1,35 +1,35 @@
 // This script removes demo app files
-import rimraf from "rimraf";
-import fs from "fs";
-import {chalkSuccess} from "./chalkConfig";
+import rimraf from 'rimraf';
+import fs from 'fs';
+import {chalkSuccess} from './chalkConfig';
 
 /* eslint-disable no-console */
 
 const pathsToRemove = [
-  "./src/actions/*",
-  "./src/businessLogic",
-  "./src/components/*",
-  "./src/constants/*",
-  "./src/containers/*",
-  "./src/images",
-  "./src/reducers/*",
-  "./src/styles",
-  "./src/routes.js",
-  "./src/index.js"
+  './src/actions/*',
+  './src/businessLogic',
+  './src/components/*',
+  './src/constants/*',
+  './src/containers/*',
+  './src/images',
+  './src/reducers/*',
+  './src/styles',
+  './src/routes.js',
+  './src/index.js'
 ];
 
 const filesToCreate = [
   {
-    path: "./src/components/emptyTest.spec.js",
-    content: "// Must have at least one test file in this directory or Mocha will throw an error."
+    path: './src/components/emptyTest.spec.js',
+    content: '// Must have at least one test file in this directory or Mocha will throw an error.'
   },
   {
-    path: "./src/index.js",
-    content: "// Set up your application entry point here..."
+    path: './src/index.js',
+    content: '// Set up your application entry point here...'
   },
   {
-    path: "./src/reducers/index.js",
-    content: "// Set up your root reducer here...\n import { combineReducers } from 'redux';\n export default combineReducers;"
+    path: './src/reducers/index.js',
+    content: '// Set up your root reducer here...\n import { combineReducers } from \'redux\';\n export default combineReducers;'
   }
 ];
 
@@ -57,4 +57,4 @@ pathsToRemove.map(path => {
   });
 });
 
-console.log(chalkSuccess("Demo app removed."));
+console.log(chalkSuccess('Demo app removed.'));

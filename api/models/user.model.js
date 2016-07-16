@@ -1,106 +1,112 @@
-const Sequelize = require("sequelize");
-const sequelize = require("../db");
-const crypto = require("crypto");
-const SECRET = "rabblerabble";
+const db = require('../db');
+const crypto = require('crypto');
+const bookshelf = db.bookshelf;
+const knex = db.knex;
+const SECRET = 'rabblerabble';
+const Promise = require('bluebird');
+const consoleLog = require('../utilities/consoleLog');
 
-const attributes = {
+const User = bookshelf.Model.extend({
+  tableName: 'users',
 
-  firstName: {
-    type: Sequelize.STRING,
-    field: "firstName",
-    allowNull: false,
-    validate: {
-      notEmpty: {msg: "First name cannot be empty."},
-      isAlpha: {msg: "First name can only contain letters."}
-    }
+  initialize: function(attributes, options) {
+
+    this.on('creating', function() {
+      this.set('confirmationToken', generateToken());
+    });
+
+    this.on('saving', function(model, attributes, options) {
+      if(attributes.emailAddress) {
+        model.set('emailAddress', attributes.emailAddress.trim().toLowerCase());
+      }
+    });
   },
 
-  lastName: {
-    type: Sequelize.STRING,
-    field: "lastName",
-    allowNull: false,
-    validate: {
-      notEmpty: {msg: "Last name cannot be empty."},
-      isAlpha: {msg: "First name can only contain letters."}
-    }
-  },
-
-  emailAddress: {
-    type: Sequelize.STRING,
-    field: "emailAddress",
-    allowNull: false,
-    unique: true,
-    validate: {
-      isEmail: {msg: "Email provided is not valid."}
+  confimationToken: {
+    get: function() {
+      return this.get('confirmationToken');
     },
-    set: function(val) {
-      this.setDataValue("emailAddress", val.toLowerCase());
+
+    set: function() {
+      return generateToken();
     }
   },
 
-  passwordHash: {
-    type: Sequelize.STRING,
-    field: "passwordHash",
-    allowNull: false
-  },
+  virtuals: {
+    password: {
+      set: function(value) {
+        const salt = generateToken(64);
+        const passwordHash = hashPassword(value, salt, SECRET); // TODO extract secret;
+        this.set('passwordSalt', salt);
+        this.set('passwordHash', passwordHash);
+      },
 
-  passwordSalt: {
-    type: Sequelize.STRING(256),
-    field: "passwordSalt",
-    allowNull: false
-  },
-
-  password: {
-    type: Sequelize.VIRTUAL,
-    set: function(password) {
-      const salt = crypto.randomBytes(64).toString("hex");
-      const hash = hashPassword(password, salt, SECRET);
-
-      this.setDataValue("password", password);
-      this.setDataValue("passwordSalt", salt);
-      this.setDataValue("passwordHash", hash);
+      get: function() {
+        return this.get('passwordHash');
+      }
     }
   },
 
-  confirmedEmail: {
-    type: Sequelize.BOOLEAN,
-    field: "confirmedEmail",
-    defaultValue: false,
-    allowNull: false
-  },
+  outputVirtuals: false
+}, {
 
-  confirmationToken: {
-    type: Sequelize.STRING,
-    field: "confirmationToken"
-  },
+  login: Promise.method(function(emailAddress, challengePassword) {
+    if (!emailAddress || !challengePassword) {
+      throw new Error('Email and password must be set.');
+    }
 
-  passwordResetToken: {
-    type: Sequelize.STRING,
-    field: "passwordResetToken"
+    emailAddress = emailAddress.trim().toLowerCase();
+
+    return new this({emailAddress: emailAddress}).fetch({require: true})
+      .tap(function(user) {
+        const passwordHash = user.get('passwordHash');
+        const passwordSalt = user.get('passwordSalt');
+        const validated = validatePassword(passwordHash, passwordSalt, SECRET, challengePassword); // TODO Extrac secret.
+
+        if (!validated) {
+          throw new Error('Unauthorized');
+        }
+
+        return validated;
+      });
+  }),
+
+  confirmAccount: function(token) {
+    const self = this;
+    return new Promise(function(resolve, reject) {
+      new self({confirmationToken: token}).fetch()
+        .tap(function(user) {
+          if(!user) return;
+          user.set('emailConfirmed', true);
+          user.save()
+            .catch(function(error) {
+              reject(error);
+            });
+        })
+        .then(function(user) {
+          if(!user) {
+            reject('Unable to locate use with that token');
+            return;
+          }
+          resolve(user);
+        })
+        .catch(function(error) {
+          reject(error);
+        });
+    });
   }
-};
-
-const options = {
-  freezeTableName: true,
-  classMethods: {},
-  instanceMethods: {
-    validatePassword: validatePassword
-  }
-};
-
-const User = sequelize.define("User", attributes, options);
-
-User.hook("beforeValidate", function(user) {
-  user.confirmationToken = crypto.randomBytes(24).toString("hex");
 });
 
 module.exports = User;
 
-function validatePassword(password) {
-  const salt = this.passwordSalt;
-  const hashedPassword = this.passwordHash;
-  const challenge = hashPassword(password, salt, SECRET);
-  return challenge === hashedPassword;
+// TODO Documentation
+function generateToken(len) {
+  len = len || 24;
+  return crypto.randomBytes(len).toString('hex');
+}
+// TODO Documentation
+function validatePassword(hashedPassword, salt, secret, challenge) {
+  return hashedPassword === hashPassword(challenge, salt, secret);
 }
 
 /**
@@ -112,23 +118,7 @@ function validatePassword(password) {
  * @returns {string}
  */
 function hashPassword(password, salt, secret) {
-  return crypto.createHmac("sha256", secret)
+  return crypto.createHmac('sha256', secret)
     .update(salt + password)
-    .digest("hex");
+    .digest('hex');
 }
-
-/*
- User.sync({force: true}).then(function() {
- return User.create({
- firstName: "Robert",
- lastName: "Stires",
- emailAddress: "rjstires@gmail.com",
- password: "Password1!"
- });
- }).then(function(user) {
- console.log(user.dataValues);
- console.log('Is password valid? ', user.validatePassword("Password1!"));
- }).catch(function(response) {
- console.log("error", response);
- });
- */
