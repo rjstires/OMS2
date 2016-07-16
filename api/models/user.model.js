@@ -1,25 +1,26 @@
 const db = require('../db');
 const crypto = require('crypto');
 const bookshelf = db.bookshelf;
-const knex = db.knex;
 const SECRET = 'rabblerabble';
 const Promise = require('bluebird');
-const consoleLog = require('../utilities/consoleLog');
+var consoleLog = require("../utilities/consoleLog.js");
 
 const User = bookshelf.Model.extend({
   tableName: 'users',
 
-  initialize: function(attributes, options) {
+  initialize: function() {
 
     this.on('creating', function() {
       this.set('confirmationToken', generateToken());
     });
 
-    this.on('saving', function(model, attributes, options) {
-      if(attributes.emailAddress) {
-        model.set('emailAddress', attributes.emailAddress.trim().toLowerCase());
-      }
-    });
+    this.on('saving', this.saving, this);
+  },
+
+  saving: function() {
+    if(this.attributes.emailAddress) {
+      this.set('emailAddress', this.attributes.emailAddress.trim().toLowerCase());
+    }
   },
 
   confimationToken: {

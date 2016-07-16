@@ -84,6 +84,11 @@ module.exports.confirm = function(req, res) {
 //   });
 // };
 
+/**
+ * TODO Check user against database to ensure they're still valid.
+ * @param req
+ * @param res
+ */
 module.exports.validateToken = function(req, res) {
   const token = req.query.token;
 
