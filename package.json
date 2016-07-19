@@ -18,6 +18,9 @@
     "build": "babel-node tools/build.js",
     "postbuild": "node server.js"
   },
+  "engines": {
+    "node": "6.3.0"
+  },
   "author": "Cory House",
   "license": "MIT",
   "dependencies": {
