@@ -5,14 +5,14 @@
   "scripts": {
     "setup": "node tools/setup/setupMessage.js && npm install && node tools/setup/setup.js",
     "start-message": "babel-node tools/startMessage.js",
-    "predevStart": "npm-run-all --parallel start-message remove-dist",
+    "predevStart": "npm-run-all --parallel start-message remove-dist",gig
     "devStart": "npm-run-all --parallel open:src lint:watch",
     "open:src": "babel-node tools/srcServer.js",
     "open:dist": "babel-node tools/distServer.js",
     "lint": "esw webpack.config.* src tools",
     "lint:watch": "npm run lint -- --watch --fix",
     "clean-dist": "npm run remove-dist && mkdir dist",
-    "remove-dist": "rimraf ./dist",
+    "remove-dist": "rm -rf ./dist",
     "build:html": "babel-node tools/buildHtml.js",
     "prestart": "npm run clean-dist && npm run build:html && npm run lint --fix",
     "start": "babel-node tools/build.js",
