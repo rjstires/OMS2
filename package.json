@@ -5,7 +5,7 @@
   "scripts": {
     "setup": "node tools/setup/setupMessage.js && npm install && node tools/setup/setup.js",
     "start-message": "babel-node tools/startMessage.js",
-    "predevStart": "npm-run-all --parallel start-message remove-dist",gig
+    "predevStart": "npm-run-all --parallel start-message remove-dist",
     "devStart": "npm-run-all --parallel open:src lint:watch",
     "open:src": "babel-node tools/srcServer.js",
     "open:dist": "babel-node tools/distServer.js",
@@ -18,7 +18,7 @@
     "start": "babel-node tools/build.js",
     "poststart": "node server"
   },
-  "author": "Cory House",
+  "author": "Robert Stires",
   "license": "MIT",
   "dependencies": {
     "axios": "0.12.0",
