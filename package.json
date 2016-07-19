@@ -14,8 +14,9 @@
     "clean-dist": "npm run remove-dist && mkdir dist",
     "remove-dist": "rimraf ./dist",
     "build:html": "babel-node tools/buildHtml.js",
-    "prebuild": "npm run clean-dist && npm run build:html",
-    "build": "babel-node tools/build.js"
+    "preinstall": "npm run clean-dist",
+    "postinstall": "babel-node tools/build.js",
+    "build": "npm run build:html && node server.js"
   },
   "engines": {
     "node": "6.3.0"
