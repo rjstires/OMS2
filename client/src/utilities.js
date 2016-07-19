@@ -1,21 +1,21 @@
-/*global Materialize*/
+var Toastr = require('toastr');
 
 export const Toast = {
 
   info: function(message) {
-    Materialize.toast(message, 3000, 'info');
+    Toastr.info(message);
   },
 
   success: function(message) {
-    Materialize.toast(message, 3000, 'success');
+    Toastr.success(message);
   },
 
   warning: function(message) {
-    Materialize.toast(message, 3000, 'warning');
+    Toastr.warning(message);
   },
 
   error: function(message) {
-    Materialize.toast(message, 3000, 'error');
+    Toastr.error(message);
   }
 
 };

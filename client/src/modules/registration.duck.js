@@ -2,7 +2,6 @@
 import axios from 'axios';
 import {browserHistory} from 'react-router';
 import initialState from './initial-state';
-import {Toast} from '../utilities';
 
 /****************************************
  *  Constants
@@ -37,37 +36,29 @@ export default function reducer(state = initialState.registration, action) {
      *  User Registration
      ****************************************/
     case REGISTER_REQUEST:
-      return Object.assign({}, state, {
-        loading: true
-      });
+      return Object.assign({}, state, {});
 
     case REGISTER_SUCCESS:
-      return Object.assign({}, state, {
-        loading: false
-      });
+      return Object.assign({}, state, {});
 
     case REGISTER_FAILURE:
-      return Object.assign({}, state, {
-        loading: false
-      });
+      return Object.assign({}, state, {});
 
     /****************************************
      *  Login
      ****************************************/
     case LOG_IN_REQUEST:
       return Object.assign({}, state, {
-        loading: true
       });
 
     case LOG_IN_SUCCESS:
       return Object.assign({}, state, {
-        loading: false,
         user: action.user
       });
 
     case LOG_IN_FAILURE:
       return Object.assign({}, state, {
-        loading: false
+        user: initialState.registration.user
       });
 
     /****************************************
@@ -75,18 +66,15 @@ export default function reducer(state = initialState.registration, action) {
      ****************************************/
     case LOG_OUT_REQUEST:
       return Object.assign({}, state, {
-        loading: false
       });
 
     case LOG_OUT_SUCCESS:
       return Object.assign({}, state, {
-        loading: false,
         user: initialState.registration.user
       });
 
     case LOG_OUT_FAILURE:
       return Object.assign({}, state, {
-        loading: false,
         user: initialState.registration.user
       });
 
@@ -95,15 +83,12 @@ export default function reducer(state = initialState.registration, action) {
      ****************************************/
     case VALIDATION_JWT_REQUEST:
       return Object.assign({}, state, {
-        loading: true,
-        user: {
-          emailConfirmed: false
-        }
+        authenticating: true
       });
 
     case VALIDATE_JWT_SUCCESS:
       return Object.assign({}, state, {
-        loading: false,
+        authenticating: false,
         user: {
           emailConfirmed: true
         }
@@ -111,26 +96,21 @@ export default function reducer(state = initialState.registration, action) {
 
     case VALIDATE_JWT_FAILURE:
       return Object.assign({}, state, {
-        loading: false,
-        user: {
-          emailConfirmed: false
-        }
+        authenticating: false,
+        user: initialState.registration.user
       });
 
     case VALIDATE_TOKEN_REQUEST:
       return Object.assign({}, state, {
-        loading: true
       });
 
     case VALIDATE_TOKEN_SUCCESS:
       return Object.assign({}, state, {
-        loading: false,
         user: action.user
       });
 
     case VALIDATE_TOKEN_FAILURE:
       return Object.assign({}, state, {
-        loading: false,
         user: initialState.registration.user
       });
 
@@ -169,11 +149,9 @@ export function registerUser(credentials) {
       .then(() => {
         browserHistory.push('/');
         dispatch(registerSuccess());
-        Toast.success('Successfully registered. Please check your email.');
       })
       .catch((response) => {
         dispatch(registerFailure());
-        Toast.error(response.data.message);
       });
   };
 }
@@ -199,12 +177,10 @@ export function confirmEmail(token) {
     // TODO Extract link to config file.
     axios.get(`http://localhost:4000/confirm?token=${token}`)
       .then(function(response) {
-        // TODO Forward user to index and send banner note.
-        Toast.success('Thank you for confirming your email address');
-        Toast.info('You`ve been automatically logged in.');
         dispatch(loginSuccess(response.data.user, response.data.jwt));
       })
       .catch(function(error) {
+        browserHistory.push('/');
         dispatch(confirmEmailFailure(error));
       });
   };
@@ -241,13 +217,10 @@ export function login(credentials) {
     // TODO Extract link to config file.
     axios.post('http://localhost:4000/login', credentials)
       .then(response => {
-        console.log(response);
         dispatch(loginSuccess(response.data.user, response.data.jwt));
         browserHistory.push('/');
-        Toast.success('Successfully logged in.');
       })
       .catch(error => {
-        Toast.error(error.data);
         dispatch(loginFailure());
       });
   };
@@ -273,7 +246,6 @@ export function logout() {
     localStorage.removeItem('token');
     dispatch(logoutSuccess());
     browserHistory.push('/');
-    Toast.success('Successfully logged out.');
   };
 }
 
@@ -292,12 +264,19 @@ export function validateJWTFailure(error) {
   };
 }
 
+export function validateJWTSuccess() {
+  return {
+    type: VALIDATE_JWT_SUCCESS
+  };
+}
+
 export function validateJWT(token) {
   return (dispatch) => {
     dispatch(validateJWTRequest());
     axios.get(`http://localhost:4000/validate-token?token=${token}`)
       .then(function(response) {
         dispatch(loginSuccess(response.data.user, response.data.jwt));
+        dispatch(validateJWTSuccess());
       })
       .catch(function(response) {
         localStorage.removeItem('token');

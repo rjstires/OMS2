@@ -52,11 +52,14 @@ const createToken = function(params, days) {
 const validateToken = function(token, callback) {
   try {
     const decoded = jwt.decode(token, config.auth.secret);
-    callback(null, decoded);
+
     const curr = new Date().getTime() / 1000;
     if (decoded.exp < curr){
       callback('Expired token.', null);
+      return;
     }
+
+    callback(null, decoded);
   } catch (e) {
     callback(e, null);
   }

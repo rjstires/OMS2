@@ -6,6 +6,12 @@ import Input from './form/input.component';
 export const fields = ['firstName', 'lastName', 'emailAddress', 'password', 'passwordConfirm'];
 
 class RegisterForm extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
+
+  }
+
   handleFormSubmit({firstName, lastName, emailAddress, password}) {
     this.props.register({firstName, lastName, emailAddress, password});
   }
@@ -29,45 +35,77 @@ class RegisterForm extends Component {
       );
     }
 
+    const formStyle = {
+      marginBottom: '0px !important'
+    };
+
     return (
-      <div className="col m4 offset-m4">
-        <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}
-              noValidate>
-          <Input
-            formObject={firstName}
-            name="firstName"
-            label="First Name" />
+      <div className="sign-up-container">
+        <div className="middle-sign-up">
+          <div className="block-flat">
+            <div className="header">
+              <h3 className="text-center"><img className="logo-img" src="lib/images/logo.png"
+                                               alt="logo"/>
+              </h3>
+            </div>
+            <div>
+              <form style={formStyle}
+                    className="form-horizontal"
+                    onSubmit={handleSubmit(this.handleFormSubmit)}
+                    parsley-validate novalidate>
+                <div className="content">
+                  <h5 className="title text-center"><strong>Sign Up</strong></h5>
+                  <hr/>
+                  <div className="form-group">
+                    <div className="col-sm-6 col-xs-6">
+                      <Input formObject={firstName}
+                             name="firstName"
+                             placeholder="First Name"
+                             icon="user"/>
 
-          <Input
-            formObject={lastName}
-            name="lastName"
-            label="Last Name" />
+                    </div>
+                    <div className="col-sm-6 col-xs-6">
+                      <Input formObject={lastName}
+                             name="lastName"
+                             placeholder="Last Name"
+                             icon="user"/>
 
-          <Input
-            formObject={emailAddress}
-            name="emailAddress"
-            label="Email Address" />
+                    </div>
+                  </div>
 
-          <Input
-            formObject={password}
-            name="password"
-            label="Password"
-            type="password" />
+                  <div className="form-group">
+                    <div className="col-sm-12">
+                      <Input formObject={emailAddress}
+                             name="emailAddress"
+                             placeholder="Email Address"
+                             icon="email"/>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <div className="col-sm-6 col-xs-6">
+                      <Input formObject={password}
+                             name="password"
+                             placeholder="Password"
+                             type="password" icon="lock"/>
+                    </div>
+                    <div className="col-sm-6 col-xs-6">
+                      <Input formObject={passwordConfirm}
+                             name="passwordConfirm"
+                             placeholder="Password Confirmation"
+                             type="password" icon="lock"/>
+                    </div>
+                  </div>
+                  <p className="spacer">By creating an account, you agree with the <a
+                    href="#">Terms</a> and <a href="#">Conditions</a>.</p>
+                  <button className="btn btn-block btn-success btn-rad btn-lg" type="submit"
+                          name="action"> Submit
+                  </button>
 
-          <Input
-            formObject={passwordConfirm}
-            name="passwordConfirm"
-            label="Password Confirmation"
-            type="password" />
-
-          <div className="row div col m12">
-            <button className="btn waves-effect waves-light" type="submit"
-                    name="action">
-              Submit
-              <i className="material-icons right">send</i>
-            </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </form>
+        </div>
       </div>
     );
   }

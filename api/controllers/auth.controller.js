@@ -2,7 +2,6 @@ const config = require('../config');
 const User = require('../models/user.model');
 const sendMail = require('../utilities/sendMail');
 const utilities = require('../utilities');
-var consoleLog = require('../utilities/consoleLog');
 
 module.exports.login = function(req, res) {
   const emailAddress = req.body.emailAddress.toLocaleLowerCase();
@@ -29,7 +28,7 @@ module.exports.register = function(req, res) {
       const emailAddress = user.attributes.emailAddress;
       const confirmationToken = user.attributes.confirmationToken;
 
-      const confirmationURL = `${config.paths.root_url}/confirm?token=${confirmationToken}`;
+      const confirmationURL = `${config.paths.root_url}/profile/?confirmAccount=${confirmationToken}`;
       sendMail.confirmAccount(fullName, emailAddress, confirmationURL);
 
       // Send user token.
@@ -37,7 +36,6 @@ module.exports.register = function(req, res) {
     })
 
     .catch(function(error) {
-      consoleLog.error(error);
       res.status(422).send({message: error});
     });
 };
@@ -58,32 +56,6 @@ module.exports.confirm = function(req, res) {
     });
 };
 
-// module.exports.requireLogin = function(req, res, next) {
-//   const token = req.header("Authorization");
-//
-//   if (!token) {
-//     denyRequest(res);
-//   }
-//
-//   utilities.validateToken(token, function(err, user) {
-//     if (err) {
-//       denyRequest(res);
-//     }
-//
-//     User.findById(user._id)
-//       .then(function(user) {
-//         if (user) {
-//           res.locals.token = token;
-//           res.locals.user = user;
-//           next();
-//         }
-//       })
-//       .catch(function(err) {
-//         next(err);
-//       });
-//   });
-// };
-
 /**
  * TODO Check user against database to ensure they're still valid.
  * @param req
@@ -95,18 +67,18 @@ module.exports.validateToken = function(req, res) {
   utilities.validateToken(token, function(err, user) {
 
     if (err) {
-      res.status(500).send({message: 'Token could not be validated'});
+      res.status(500).send({message: 'Invalid token.', error: err});
       return;
     }
 
-    User.findOne({emailAddress: user.emailAddress}).exec()
+    new User({emailAddress: user.emailAddress}).fetch()
       .then(function(user) {
         if (!user) {
-          res.status(401).send({message: 'Token could not be validated'});
+          res.status(401).send({message: 'Token could not be located.'});
           return;
         }
 
-        res.status(200).send(createResponseObject(user.dataValues));
+        res.status(200).send(createResponseObject(user.attributes));
       })
       .catch(function(error) {
         res.status(401).send({message: error});
@@ -121,7 +93,7 @@ function createResponseObject(user) {
     firstName: user.firstName,
     lastName: user.lastName,
     emailAddress: user.emailAddress,
-    confirmedEmail: user.confirmedEmail
+    emailConfirmed: user.emailConfirmed
   };
 
   responseObject.jwt = utilities.createToken(responseObject.user);

@@ -18,6 +18,11 @@ class LoginForm extends Component {
     };
   }
 
+  constructor(props, context) {
+    super(props, context);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
+  }
+
   handleFormSubmit({emailAddress, password}) {
     this.props.login({emailAddress, password});
   }
@@ -31,63 +36,56 @@ class LoginForm extends Component {
     }
 
     return (
-      <div className="col m3 offset-m5 z-depth-1 login-form">
-        <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}
-              noValidate>
+      <div className="login-container">
+        <div className="middle-login">
+          <div className="block-flat">
+            <div className="header">
+              <h3 className="text-center"><img className="logo-img" src="lib/images/logo.png"
+                                               alt="logo"/>
+              </h3>
+            </div>
+            <div>
+              <form onSubmit={handleSubmit(this.handleFormSubmit)} noValidate className="form-horizontal">
+                <div className="content">
+                  <h4 className="title">Login Access</h4>
+                  <div className="form-group">
+                    <div className="col-sm-12">
+                      <Input
+                        formObject={emailAddress}
+                        name="emailAddress"
+                        placeholder="Email Address"
+                        type="email"
+                        icon="email"
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <div className="col-sm-12">
+                      <Input
+                        formObject={password}
+                        name="password"
+                        placeholder="Password"
+                        type="password"
+                        icon="lock_outline"
+                      />
+                    </div>
+                  </div>
 
-          <div className="section">
-            <h5>Login</h5>
-            <p>Enter your credentials to login</p>
-          </div>
-          <div className="divider"></div>
-
-          <div className="row shallow">
-            <div className="col s12 m12 l12">
-              <Input
-                formObject={emailAddress}
-                name="emailAddress"
-                label="Email Address"
-                type="email"
-                icon="email"
-              />
+                </div>
+                <div className="foot">
+                  <Link to="/register" className="btn waves-effect waves-light col s12">
+                    Register </Link>
+                  <button className="btn waves-effect waves-light col s12" type="submit"
+                          name="action">
+                    Submit
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-
-          <div className="row shallow">
-            <div className="col s12 m12 l12">
-              <Input
-                formObject={password}
-                name="password"
-                label="Password"
-                type="password"
-                icon="lock_outline"
-              />
-            </div>
+          <div className="text-center out-links"><a href="#">&copy; 2014 Your Company</a>
           </div>
-
-
-          <div className="row">
-            <div className=" col s12 m12 l12 input-field">
-              <input type="checkbox" id="rememberMe" name="rememberMe"/>
-              <label htmlFor="rememberMe">Remember Me</label>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="input-field col s12">
-              <button
-                className="btn waves-effect waves-light col s12"
-                type="submit"
-                name="action">
-                Submit
-              </button>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col s6 m6 l6 center-align"><Link to="/register">Register!</Link></div>
-            <div className="col s6 m6 l6 center-align"><Link to="/forgot-password">Forgot password?</Link></div>
-          </div>
-        </form>
+        </div>
       </div>
     );
   }

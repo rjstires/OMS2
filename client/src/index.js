@@ -11,13 +11,23 @@ import {validateJWT} from './modules/registration.duck';
 // Misc.
 require('./favicon.ico'); // Tell webpack to load favicon.ico
 
-// Vendor Libraries
+// Scripts
 window.jQuery = require('jquery');
 window.$ = require('jquery');
-require('materialize-css/dist/css/materialize.css');
-require('./lib/js/materialize');
-require('./styles/styles.scss');
+require('./lib/js/jquery-ui');
+require('./lib/js/jquery.nanoscroller');
+require('./lib/js/jquery.gritter');
+require('./lib/js/flat_dream');
+require('./lib/js/bootstrap');
 
+
+// Stylesheets
+require('./lib/styles/bootstrap.css');
+require('./lib/styles/jquery.gritter.css');
+require('./lib/styles/font-awesome.css');
+require('./lib/styles/style-gray.css');
+require('./lib/styles/nanoscroller.css');
+require('./styles/styles.scss');
 
 // Store
 const store = configureStore();

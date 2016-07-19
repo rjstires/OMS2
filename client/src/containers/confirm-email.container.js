@@ -7,7 +7,7 @@ class ConfirmEmailContainer extends Component {
   constructor(props, context) {
     super(props, context);
 
-    const token = props.location.query.token;
+    const token = props.location.query.confirmAccount;
     const confirmed = props.confirmed;
 
     if(token && !confirmed){
