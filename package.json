@@ -2,6 +2,9 @@
   "name": "react-slingshot",
   "version": "4.0.0",
   "description": "Starter kit for creating apps with React and Redux",
+  "engines": {
+    "node": "6.3.0"
+  },
   "scripts": {
     "setup": "node tools/setup/setupMessage.js && npm install && node tools/setup/setup.js",
     "start-message": "node tools/startMessage.js",
