@@ -12,8 +12,8 @@ import {validateJWT} from './modules/registration.duck';
 require('./favicon.ico'); // Tell webpack to load favicon.ico
 
 // Scripts
-window.jQuery = require('jquery');
-window.$ = require('jquery');
+window.jQuery = require('./lib/js/jquery');
+window.$ = require('./lib/js/jquery');
 require('./lib/js/jquery-ui');
 require('./lib/js/jquery.nanoscroller');
 require('./lib/js/jquery.gritter');
