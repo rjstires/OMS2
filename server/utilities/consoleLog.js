@@ -2,14 +2,16 @@
 
 const chalk = require('chalk');
 const _ = require('lodash');
+const util = require('util');
 const config = require('../config');
 
 function report(color){
   if(config.env !== 'development'){return;}
+
   return function message() {
     _.each(arguments, function(element) {
       if(typeof element === 'object'){
-        console.log(element);
+        console.log(util.inspect(element, {depth: null}));
         return;
       }
       console.log(chalk[color](element));

@@ -3,9 +3,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-// Database inclusion
-require('./server/db');
-
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -23,7 +20,15 @@ app.use(function(err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
     res.status(401);
   }
+  next();
 });
+
+app.use(function(err, req, res, next) {
+
+    res.status(400).send(err);
+
+});
+
 
 app.listen(process.env.PORT || 3000, function() {
   console.log('API server running on port 3000');

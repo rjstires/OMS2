@@ -1,11 +1,10 @@
-const db = require('../db/index');
 const crypto = require('crypto');
-const bookshelf = db.bookshelf;
+const boostingBookshelf = require('../models/base.model');
 const SECRET = 'rabblerabble';
 const Promise = require('bluebird');
 const consoleLog = require('../utilities/consoleLog');
 
-const User = bookshelf.Model.extend({
+const User = boostingBookshelf.Model.extend({
   tableName: 'users',
 
   initialize: function() {
