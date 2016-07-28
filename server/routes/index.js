@@ -1,14 +1,8 @@
 const router = require('express').Router(); // eslint-disable-line new-cap
-const authRoutes = require('./auth.routes.js');
-const customerRoutes = require('./customer.routes.js');
-const gameRoutes = require('./game.routes.js');
-const optionTypeRoutes = require('./option-type.routes');
 
-router.use('/',
-  authRoutes,
-  customerRoutes,
-  optionTypeRoutes,
-  gameRoutes
-);
+router.use('/customers', require('./customer.routes.js'));
+router.use('/games', require('./game.routes.js'));
+router.use('/options-types', require('./option-type.routes'));
+router.use('/', require('./auth.routes.js'));
 
 module.exports = router;
