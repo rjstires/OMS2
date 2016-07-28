@@ -1,3 +1,4 @@
+const boostingEdgeBookshelf = require('../models/base.model');
 const BaseController = {
   getAll: function(req, res, next) {
     this.model.findAll()
@@ -6,10 +7,10 @@ const BaseController = {
           res.status(200).send({message: 'No records returned'});
           return;
         }
-
         res.status(200).send({results: results});
-      }).catch(function(error) {
-      handleError(error, res);
+      })
+      .catch(function(error) {
+        handleError(error, res);
     });
   },
 
@@ -57,13 +58,14 @@ const BaseController = {
   }
 };
 
-BaseController.extend = function extend(obj) {
-  return Object.assign({}, BaseController, obj);
-};
-
 function handleError(error, res){
-  console.log(error);
   return res.status(400).send({error: error});
 }
 
-module.exports = BaseController;
+module.exports = function(obj) {
+  if (!obj.model.findAll) {
+    throw new Error('Check that your model object is set properly.');
+  }
+
+  return Object.assign({}, BaseController, obj);
+};

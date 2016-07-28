@@ -1,8 +1,8 @@
-const model = require('../models/index');
+const models = require('../models/index');
 const BaseController = require('./base.controller');
 
-const CustomerController = BaseController.extend({
-  model: model.Customer
+const CustomerController = BaseController({
+  model: models.Customer
 });
 
 module.exports = CustomerController;

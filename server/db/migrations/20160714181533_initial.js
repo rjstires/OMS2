@@ -51,6 +51,39 @@ exports.up = function(knex, Promise) {
     t.timestamps(true, true);
   });
 
+  const game = knex.schema.createTable('games', function(t) {
+    t.increments('id').primary();
+    t.string('title');
+    t.timestamps(true, true);
+  });
+
+  const item = knex.schema.createTable('items', function(t) {
+    t.increments('id').primary();
+    t.string('description');
+    t.integer('item_id').notNullable().references('items.item_id');
+    t.integer('game_id').notNullable().references('games.game_id');
+    t.timestamps(true, true);
+  });
+
+  const itemOptionType = knex.schema.createTable('item_has_option_type', function(t) {
+    t.integer('item_id').notNullable().references('items.id');
+    t.integer('option_type_id').notNullable().references('option_types.id');
+    t.timestamps(true, true);
+  });
+
+  const itemVariant = knex.schema.createTable('item_variants', function(t) {
+    t.increments('id').primary();
+    t.string('description');
+    t.integer('item_id').notNullable().references('items.item_id');
+    t.timestamps(true, true);
+  });
+
+  const itemVariantOptionValue = knex.schema.createTable('item_variant_has_option_value', function(t) {
+    t.integer('item__variant_id').notNullable().references('item_variants.id');
+    t.integer('option_value_id').notNullable().references('option_values.id');
+    t.timestamps(true, true);
+  });
+
   const eventSlot = knex.schema.createTable('event_slots', function(t) {
     t.increments('id').primary();
     t.string('description');
@@ -107,7 +140,12 @@ exports.up = function(knex, Promise) {
     contact_types,
     contacts,
     users,
-    comments
+    comments,
+    game,
+    item,
+    itemOptionType,
+    itemVariant,
+    itemVariantOptionValue
   ]);
 };
 
@@ -125,3 +163,4 @@ exports.down = function(knex, Promise) {
     knex.schema.dropTable('comments')
   ]);
 };
+

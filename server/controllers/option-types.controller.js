@@ -1,7 +1,7 @@
-const BaseController = require('./base.controller');
 const models = require('./../models');
+const BaseController = require('./base.controller');
 
-const OptionTypeController = BaseController.extend({
+const OptionTypeController = BaseController({
   model: models.OptionType
 });
 

@@ -12,11 +12,9 @@ const Customer = boostingBookshelf.Model.extend({
   }
 });
 
-const Customers = boostingBookshelf.Collection.extend({
-  model: Customer
-});
+// const Customers = boostingBookshelf.Collection.extend({
+//   model: Customer
+// });
 
-module.exports = {
-  Customer: boostingBookshelf.model('Customer', Customer),
-  Customers: boostingBookshelf.model('Customers', Customers)
-};
+module.exports = boostingBookshelf.model('Customer', Customer);
+
