@@ -1,6 +1,5 @@
-var router = require('express').Router(); // eslint-disable-line new-cap
-var authController = require('../controllers/auth.controller.js');
-var _ = require('lodash');
+const router = require('express').Router(); // eslint-disable-line new-cap
+const authController = require('../controllers/auth.controller.js');
 
 router.route('/login')
   .post(authController.login);
