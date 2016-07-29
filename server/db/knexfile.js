@@ -14,6 +14,17 @@ const c = {
     }
   },
 
+  test: {
+    client: 'sqlite3',
+    //debug: true,
+    migrations: {
+      directory: path.join(config.paths.root, 'db/migrations')
+    },
+    connection: {
+      filename: path.join(config.paths.root, 'db/test.sqlite3')
+    }
+  },
+
   staging: {
     client: 'postgresql',
     connection: {
@@ -41,10 +52,12 @@ const c = {
       user:     config.db.name,
       password: config.db.password
     },
+
     pool: {
       min: 2,
       max: 10
     },
+
     migrations: {
       tableName: 'knex_migrations',
       directory: path.join(config.paths.root, 'db/migrations')

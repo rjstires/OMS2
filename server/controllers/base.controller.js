@@ -4,7 +4,7 @@ const BaseController = {
     this.model.findAll()
       .then(function(results) {
         if (results.length === 0) {
-          res.status(200).send({message: 'No records returned'});
+          res.status(204).send();
           return;
         }
         res.status(200).send({results: results});
@@ -17,7 +17,7 @@ const BaseController = {
   create: function(req, res, next) {
     this.model.forge(req.body).save()
       .then(function(newObj) {
-        res.status(200).send(newObj);
+        res.status(201).send(newObj);
       }).catch(function(error) {
       handleError(error, res);
     });
