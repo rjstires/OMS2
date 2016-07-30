@@ -6,6 +6,7 @@ class Input extends Component {
       formObject: PropTypes.object.isRequired,
       name: PropTypes.string.isRequired,
       placeholder: PropTypes.string.isRequired,
+      label: PropTypes.string,
       type: PropTypes.string,
       width: PropTypes.string,
       icon: PropTypes.string
@@ -34,13 +35,22 @@ class Input extends Component {
     const formObject = this.props.formObject;
     const name = this.props.name;
     const placeholder = this.props.placeholder;
+    const label = this.props.label;
+    const icon = this.props.icon;
+
+    const surroundClass = classNames({
+      'input-group': (icon),
+      'form-group': !icon
+    });
+
     const inputClasses = classNames({
-      "form-control": true
+      'form-control': true
     });
 
     return (
       <div>
-        <div className="input-group">
+        <div className={surroundClass}>
+          {label && <label htmlFor={name}>{label}</label>}
           {this.displayIcon()}
           <input name={name}
                  id={name}
