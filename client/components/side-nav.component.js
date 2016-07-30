@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 
 const SideNav = (props) => {
   return (
@@ -19,9 +20,9 @@ const SideNav = (props) => {
             </div>
             {/*Menu*/}
             <ul className="cl-vnavigation">
-              <li><a href="#"><i className="fa fa-blind" aria-hidden="true"></i>First Level Item</a>
+              <li><a href="#"><i className="fa fa-blind" aria-hidden="true"></i>Resource Management</a>
                 <ul className="sub-menu">
-                  <li><a href="#">Second Level Item</a></li>
+                  <li><Link to="games">Games</Link></li>
                 </ul>
               </li>
             </ul>

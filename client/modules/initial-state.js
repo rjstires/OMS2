@@ -7,5 +7,9 @@ export default {
       emailAddress: null,
       emailConfirmed: null
     }
+  },
+  games: {
+    loading: false,
+    titles: []
   }
 };
