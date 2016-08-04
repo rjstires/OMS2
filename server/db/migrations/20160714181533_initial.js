@@ -59,8 +59,8 @@ exports.up = function(knex, Promise) {
 
   const item = knex.schema.createTable('items', function(t) {
     t.increments('id').primary();
+    t.string('title');
     t.string('description');
-    t.integer('item_id').notNullable().references('items.item_id');
     t.integer('game_id').notNullable().references('games.game_id');
     t.timestamps(true, true);
   });
