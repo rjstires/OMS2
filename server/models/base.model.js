@@ -2,6 +2,7 @@ const dbConfig = require('../db/knexfile');
 const knex = require('knex')(dbConfig);
 const boostingBookshelf = require('bookshelf')(knex);
 const _ = require('lodash');
+const checkit = require('checkit');
 
 let proto;
 
@@ -16,7 +17,16 @@ proto = boostingBookshelf.Model.prototype;
 
 boostingBookshelf.Model = boostingBookshelf.Model.extend({
 
-  hasTimestamps: true
+  hasTimestamps: true,
+
+  initialize: function(){
+    this.on('saving', this.validateSave);
+  },
+
+  validateSave(){
+    const rules = this.validationRules || {};
+    return checkit(rules).run(this.attributes);
+  }
 
 }, {
   findOne: function findOne(data, options) {
