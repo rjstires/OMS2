@@ -1,7 +1,7 @@
 import React, {PropTypes, Component} from 'react';
 import {reduxForm} from 'redux-form';
-import LoadingComponent from './loading.component';
-import Input from './form/input.component';
+import LoadingComponent from '../../loading.component.js';
+import Input from '../../form/input.component.js';
 
 export const fields = ['firstName', 'lastName', 'emailAddress', 'password', 'passwordConfirm'];
 

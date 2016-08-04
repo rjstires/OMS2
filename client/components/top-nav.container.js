@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {actions} from '../modules/registration.duck';
-import UserNav from '../components/user-nav.component';
+import {actions} from '../modules/registration.duck.js';
+import UserNav from './user-nav.component.js';
 
 export const TopNavContainer = (props) => {
   return (

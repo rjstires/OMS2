@@ -1,7 +1,7 @@
 import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {actions} from '../modules/registration.duck';
+import {actions} from '../../modules/registration.duck.js';
 
 class UserProfileContainer extends Component {
   constructor(props, context) {

@@ -1,7 +1,7 @@
 import React, {PropTypes, Component} from 'react';
 import {reduxForm} from 'redux-form';
-import LoadingComponent from './loading.component';
-import Input from './form/input.component';
+import LoadingComponent from '../../loading.component.js';
+import Input from '../../form/input.component.js';
 import {Link} from 'react-router';
 
 export const fields = ['emailAddress', 'password'];

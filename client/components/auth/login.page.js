@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {actions} from '../modules/registration.duck';
-import LoginForm from '../components/login-form.component';
+import {actions} from '../../modules/registration.duck.js';
+import LoginForm from './components/login-form.component.js';
 
 export const LoginPage = (props) => {
   return (

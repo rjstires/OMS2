@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 //import TopNavContainer from '../containers/nav-bar.container'; // eslint-disable-line import/no-named-as-default
-import TopNav from '../containers/top-nav.container';
+import TopNav from './top-nav.container.js';
 import SideNav from './side-nav.component';
 const App = (props) => {
   return (

@@ -3,21 +3,38 @@ import {Route, IndexRoute} from 'react-router';
 
 import App from './components/app.component';
 import HomePage from './components/home-page.component';
-import LoginPage from './containers/login-page.container'; // eslint-disable-line import/no-named-as-default
-import RegisterPage from './containers/register-page.container'; // eslint-disable-line import/no-named-as-default
-import UserProfile from './containers/user-profile.container'; // eslint-disable-line import/no-named-as-default
-import GamesPage from './containers/games-page.container';
 import NotFoundPage from './components/not-found.component';
-import ConfirmEmail from './containers/confirm-email.container';
+
+// User Routes
+import LoginPage from './components/auth/login.page'; // eslint-disable-line import/no-named-as-default
+import RegisterPage from './components/auth/register.page.js'; // eslint-disable-line import/no-named-as-default
+import UserProfile from './components/user/user-profile.container.js'; // eslint-disable-line import/no-named-as-default
+import ConfirmEmail from './components/auth/confirm-email.container.js';
+
+// Games Routes
+import GamesPage from './components/games/games.page.js';
+import ListGamesContainer from './components/games/list.container.js';
+import ViewGameContainer from './components/games/view.container.js';
+import NewGameContainer from './components/games/new.container.js';
+import EditGameContainer from './components/games/edit.container.js';
 
 export default (
   <Route path="/" component={App}>
-    <IndexRoute component={HomePage}/>
-    <Route path="login" component={LoginPage}/>
-    <Route path="register" component={RegisterPage}/>
-    <Route path="confirm" component={ConfirmEmail}/>
-    <Route path="profile" component={UserProfile}/>
-    <Route path="games" component={GamesPage}/>
-    <Route path="*" component={NotFoundPage}/>
+      <IndexRoute component={HomePage}/>
+      <Route path="login" component={LoginPage}/>
+      <Route path="register" component={RegisterPage}/>
+      <Route path="confirm" component={ConfirmEmail}/>
+      <Route path="profile" component={UserProfile}/>
+
+      { /** Games **/ }
+      <Route path="games" component={GamesPage}>
+            <IndexRoute component={ListGamesContainer} />
+            <Route path="new" component={NewGameContainer}/>
+            <Route path=":id" component={ViewGameContainer}/>
+            <Route path=":id/edit" component={EditGameContainer}/>
+      </Route>
+
+
+      <Route path="*" component={NotFoundPage}/>
   </Route>
 );
