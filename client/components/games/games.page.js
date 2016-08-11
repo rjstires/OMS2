@@ -2,10 +2,6 @@ import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {actions} from '../../modules/games.duck.js';
-import GameRow from './components/game-row.component.js';
-import NewGameForm from './components/new-game-form.component.js';
-import LoadingComponent from '../loading.component.js';
-import AlertComponent from '../alert.component.js';
 
 class GamesPage extends Component {
   constructor(props, context) {

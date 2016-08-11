@@ -5,22 +5,20 @@ import {actions} from '../../modules/games.duck';
 import GameRow from './components/game-row.component';
 import LoadingComponent from '../loading.component';
 import AlertComponent from '../alert.component';
-import ButtonComponent from '../common/button.component';
-import NewGameForm from './components/new-game-form.component';
+import GameForm from './components/game-form.component';
 
 class ListGamesContainer extends Component {
   constructor(props, context) {
     super(props, context);
 
     this.deleteGame = this.deleteGame.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.submit = this.submit.bind(this);
     this.resetForm = this.resetForm.bind(this);
     this.toggleNewGameForm = this.toggleNewGameForm.bind(this);
     this.setCurrentGame = this.setCurrentGame.bind(this);
   }
 
   componentWillMount() {
-
     this.state = {
       showForm: false,
       loading: true
@@ -35,31 +33,35 @@ class ListGamesContainer extends Component {
     this.props.actions.deleteGame(id);
   }
 
-  handleSubmit(game) {
+  submit(game) {
     this.setState({loading: true});
 
     if (this.props.games.currentGame) {
-      this.props.actions.updateGame(this.props.games.currentGame.id, game).then(function() {
-        this.props.actions.clearCurrentGame();
-        this.setState({showForm: false});
-        this.setState({loading: false});
-      }.bind(this));
+      this.props.actions.updateGame(this.props.games.currentGame.id, game)
+        .then(function(response) {
+          this.props.actions.updateGameSuccess(response);
+          this.setState({showForm: false});
+          this.setState({loading: false});
+        }.bind(this));
 
       return;
     }
 
-    this.props.actions.createGame(game);
-    this.setState({showForm: false});
-    this.setState({loading: false});
+    this.props.actions.createGame(game)
+      .then((success)=> {
+        this.props.actions.createGameSuccess(success.data);
+        this.setState({showForm: false});
+        this.setState({loading: false});
+      });
   }
 
-  resetForm(){
+  resetForm() {
     this.setState({showForm: false});
     this.props.actions.clearCurrentGame();
   }
 
   toggleNewGameForm() {
-    if(this.state.showForm){
+    if (this.state.showForm) {
       this.props.actions.clearCurrentGame();
     }
 
@@ -81,13 +83,13 @@ class ListGamesContainer extends Component {
     if (games && games.length > 0) {
       gamesList = games.map(function(game, index) {
         return (<GameRow game={game}
-                        key={index}
-                        deleteGame={self.deleteGame}
-                        setCurrentGame={self.setCurrentGame} />);
+                         key={index}
+                         deleteGame={self.deleteGame}
+                         setCurrentGame={self.setCurrentGame}/>);
       });
     }
 
-    if(loading){
+    if (loading) {
       return <LoadingComponent />
     }
 
@@ -97,7 +99,7 @@ class ListGamesContainer extends Component {
         <div className="block-flat col-md-offset-3 col-md-6">
           <div className="header"><h2>New Game</h2></div>
           <div className="content">
-            <NewGameForm createGame={this.handleSubmit} handleReset={this.resetForm} />
+            <GameForm submit={this.submit} handleReset={this.resetForm}/>
           </div>
         </div>
         }

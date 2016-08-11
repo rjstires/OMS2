@@ -2,7 +2,7 @@ import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {actions} from '../../modules/games.duck.js';
-import NewGameForm from './components/new-game-form.component.js';
+import GameForm from './components/game-form.component.js';
 
 
 class NewGameContainer extends Component {
@@ -19,7 +19,7 @@ class NewGameContainer extends Component {
 
   render() {
     return (
-        <NewGameForm createGame={this.createGame}/>
+        <GameForm createGame={this.createGame}/>
     );
   }
 }

@@ -9,17 +9,13 @@ const LOAD_GAMES_REQUEST = 'LOAD_GAMES_REQUEST';
 const LOAD_GAMES_SUCCESS = 'LOAD_GAMES_SUCCESS';
 const LOAD_GAMES_FAILURE = 'LOAD_GAMES_FAILURE';
 
-const CREATE_GAME_REQUEST = 'CREATE_GAME_REQUEST';
 const CREATE_GAME_SUCCESS = 'CREATE_GAME_SUCCESS';
-const CREATE_GAME_FAILURE = 'CREATE_GAME_FAILURE';
 
 const DELETE_GAME_REQUEST = 'DELETE_GAME_REQUEST';
 const DELETE_GAME_SUCCESS = 'DELETE_GAME_SUCCESS';
 const DELETE_GAME_FAILURE = 'DELETE_GAME_FAILURE';
 
-const UPDATE_GAME_REQUEST = 'UPDATE_GAME_REQUEST';
 const UPDATE_GAME_SUCCESS = 'UPDATE_GAME_SUCCESS';
-const UPDATE_GAME_FAILURE = 'UPDATE_GAME_FAILURE';
 
 const SET_CURRENT_GAME = 'SET_CURRENT_GAME';
 const CLEAR_CURRENT_GAME = 'CLEAR_CURRENT_GAME';
@@ -42,17 +38,11 @@ export default function reducer(state = initialState.games, action) {
       return Object.assign({}, state, {error: action.error, titles: []});
 
     /** Create a game. **/
-    case CREATE_GAME_REQUEST:
-      return Object.assign({}, state, {error: null});
 
     case CREATE_GAME_SUCCESS:
       return Object.assign({}, state, {
-        error: null,
         titles: [...state.titles, action.game]
       });
-
-    case CREATE_GAME_FAILURE:
-      return Object.assign({}, state, {error: action.error});
 
     /** Delete a game **/
     case DELETE_GAME_REQUEST:
@@ -73,7 +63,7 @@ export default function reducer(state = initialState.games, action) {
       return Object.assign({}, state, {currentGame: action.game});
 
     case CLEAR_CURRENT_GAME:
-      return Object.assign({}, state, {currentGame: null});
+      return Object.assign({}, state, {currentGame: ' '});
 
     case UPDATE_GAME_SUCCESS:
       return Object.assign({}, state, {
@@ -138,32 +128,16 @@ export function loadGames() {
 }
 
 /** Create a game. **/
-export const createGameRequest = () => {
-  return {
-    type: CREATE_GAME_REQUEST
-  };
-};
-
-export const createGameSuccess = (response) => {
-  return {
-    type: CREATE_GAME_SUCCESS,
-    game: response.data
-  };
-};
-
-export const createGameFailure = (response) => {
-  return {
-    type: CREATE_GAME_FAILURE,
-    error: 'Shit happened.'
-  };
-};
-
 export const createGame = (game) => {
   return (dispatch) => {
-    dispatch(createGameRequest());
-    return axios.post('http://localhost:3000/games', game)
-      .then((response) => dispatch(createGameSuccess(response)))
-      .catch((response) => dispatch(createGameFailure(response)));
+    return axios.post('http://localhost:3000/games', game);
+  }
+};
+
+export const createGameSuccess = (game) => {
+  return {
+    type: CREATE_GAME_SUCCESS,
+    game
   };
 };
 
@@ -210,9 +184,11 @@ export const clearCurrentGame = () => {
   };
 };
 
-export const updateGameRequest = (game) => {
-  return {
-    type: UPDATE_GAME_REQUEST
+export const updateGame = (id, game) => {
+  const updatedGame = stripUnedittableFields(game);
+
+  return (dispatch) => {
+    return axios.patch(`http://localhost:3000/games/${id}`, updatedGame);
   };
 };
 
@@ -223,28 +199,13 @@ export const updateGameSuccess = (response) => {
   };
 };
 
-export const updateGameFailure = (error) => {
-  return {
-    type: UPDATE_GAME_FAILURE,
-    error
-  };
-};
-
-export const updateGame = (id, game) => {
-  const updatedGame = stripUnedittableFields(game);
-
-  return (dispatch) => {
-    return axios.patch(`http://localhost:3000/games/${id}`, updatedGame)
-      .then( (response) => dispatch(updateGameSuccess(response) ))
-      .catch( (error) => dispatch(updateGameFailure(error) ));
-  };
-};
-
 export const actions = {
   loadGames,
   createGame,
+  createGameSuccess,
   deleteGame,
   updateGame,
+  updateGameSuccess,
   setCurrentGame,
   clearCurrentGame
 };
