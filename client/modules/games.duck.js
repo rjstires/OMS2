@@ -192,10 +192,10 @@ export const updateGame = (id, game) => {
   };
 };
 
-export const updateGameSuccess = (response) => {
+export const updateGameSuccess = (game) => {
   return {
     type: UPDATE_GAME_SUCCESS,
-    game: response.data
+    game
   };
 };
 

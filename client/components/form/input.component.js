@@ -37,7 +37,10 @@ const Input = (props) => {
 Input.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
-  error: PropTypes.string,
+  error: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.string
+  ]),
   icon: PropTypes.string,
   touched: PropTypes.bool,
   input: PropTypes.object

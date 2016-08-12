@@ -8,7 +8,9 @@ import AlertComponent from '../alert.component';
 import Portlet from '../games/portlet.component';
 import GameForm from './components/game-form.component';
 import TransitionGroup from 'react-addons-css-transition-group';
-
+import {SubmissionError} from 'redux-form';
+import Promise from 'bluebird';
+import _ from 'lodash';
 
 class ListGamesContainer extends Component {
   constructor(props, context) {
@@ -41,14 +43,36 @@ class ListGamesContainer extends Component {
     this.props.actions.deleteGame(id);
   }
 
-  createGame() {
-    // TODO
-    console.log('clicked');
+  createGame(game) {
+    return new Promise((resolve, reject) => {
+      this.props.actions.createGame(game)
+        .then((res) => {
+          this.props.actions.createGameSuccess(res.data);
+          this.closeNewGameForm();
+          resolve(res);
+        })
+        .catch((err) => {
+          const errors = err.data.error;
+          _.each(errors, function(value, key) {
+            reject(new SubmissionError({[key]: [value], _error: 'Game creation failed.'}));
+          });
+
+        });
+    });
+
   }
 
-  updateGame() {
-    // TODO
-    console.log('clicked');
+  updateGame(game) {
+    const id = game.id;
+    return new Promise((resolve, reject) => {
+      this.props.actions.updateGame(id, game)
+        .then((res) => {
+          this.closeEditGameForm();
+          this.props.actions.updateGameSuccess(res.data);
+        })
+        .catch(reject); // TODO Rejections...
+    });
+
   }
 
   displayNewGameForm() {
@@ -96,12 +120,12 @@ class ListGamesContainer extends Component {
         <TransitionGroup transitionName="fade" transitionEnterTimeout={250} transitionLeaveTimeout={250}>
           {this.state.newGame &&
           <Portlet title="Create a Game" closeWindow={this.closeNewGameForm}>
-            <GameForm submit={this.createGame} />
+            <GameForm onSubmit={this.createGame} />
           </Portlet>
           }
           {this.state.editGame &&
           <Portlet title="Edit Game" closeWindow={this.closeEditGameForm}>
-            <GameForm submit={this.updateGame} />
+            <GameForm onSubmit={this.updateGame} />
           </Portlet>
           }
         </TransitionGroup>

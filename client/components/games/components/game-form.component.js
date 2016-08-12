@@ -6,11 +6,9 @@ import Input from '../../form/input.component.js';
 const fields = ['title'];
 const formName = 'newGameForm';
 
-class GameForm extends Component {
-  render() {
-    const {handleSubmit} = this.props;
+let GameForm = (props) => {
     return (
-      <form onSubmit={handleSubmit(this.props.submit)}>
+      <form onSubmit={props.handleSubmit}>
         <label htmlFor="title">Game Title</label>
         <Field name="title" component={Input}/>
         <button className="btn btn-primary pull-right" type="submit">Submit</button>
@@ -19,8 +17,8 @@ class GameForm extends Component {
         <div className="clearfix"></div>
       </form>
     );
-  }
 }
+
 const validate = (values) => {
   const errors = {};
 
@@ -28,12 +26,12 @@ const validate = (values) => {
     errors.title = 'The title is required.';
   }
 
-  return errors;
+  return {};
 };
 
 GameForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  submit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired
 };
 
 GameForm = reduxForm({
@@ -44,7 +42,7 @@ GameForm = reduxForm({
 )(GameForm);
 
 GameForm = connect(
-  state => ({ initialValues: state.games.currentGame}),
+  state => ({initialValues: state.games.currentGame}),
   {}
 )(GameForm);
 
