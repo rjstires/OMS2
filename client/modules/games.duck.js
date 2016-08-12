@@ -63,7 +63,7 @@ export default function reducer(state = initialState.games, action) {
       return Object.assign({}, state, {currentGame: action.game});
 
     case CLEAR_CURRENT_GAME:
-      return Object.assign({}, state, {currentGame: ' '});
+      return Object.assign({}, state, {currentGame: {}});
 
     case UPDATE_GAME_SUCCESS:
       return Object.assign({}, state, {

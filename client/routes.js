@@ -15,8 +15,6 @@ import ConfirmEmail from './components/auth/confirm-email.container.js';
 import GamesPage from './components/games/games.page.js';
 import ListGamesContainer from './components/games/list.container.js';
 import ViewGameContainer from './components/games/view.container.js';
-import NewGameContainer from './components/games/new.container.js';
-import EditGameContainer from './components/games/edit.container.js';
 
 export default (
   <Route path="/" component={App}>
@@ -29,9 +27,7 @@ export default (
       { /** Games **/ }
       <Route path="games" component={GamesPage}>
             <IndexRoute component={ListGamesContainer} />
-            <Route path="new" component={NewGameContainer}/>
             <Route path=":id" component={ViewGameContainer}/>
-            <Route path=":id/edit" component={EditGameContainer}/>
       </Route>
 
 

@@ -50,3 +50,27 @@
   margin-top: -170px;
   margin-left: -215px;
 }
+
+.fade-enter {
+  opacity: 0.1;
+  &.fade-enter-active {
+    opacity: 1;
+    -webkit-transition: opacity 250ms ease-in;
+    -moz-transition: opacity 250ms ease-in;
+    -ms-transition: opacity 250ms ease-in;
+    -o-transition: opacity 250ms ease-in;
+    transition: opacity 250ms ease-in;
+  }
+}
+
+.fade-leave {
+  opacity: 1;
+  &.fade-leave-active {
+    opacity: 0.01;
+    -webkit-transition: opacity 250ms ease-in;
+    -moz-transition: opacity 250ms ease-in;
+    -ms-transition: opacity 250ms ease-in;
+    -o-transition: opacity 250ms ease-in;
+    transition: opacity 250ms ease-in;
+  }
+}

@@ -5,22 +5,30 @@ import {actions} from '../../modules/games.duck';
 import GameRow from './components/game-row.component';
 import LoadingComponent from '../loading.component';
 import AlertComponent from '../alert.component';
+import Portlet from '../games/portlet.component';
 import GameForm from './components/game-form.component';
+import TransitionGroup from 'react-addons-css-transition-group';
+
 
 class ListGamesContainer extends Component {
   constructor(props, context) {
     super(props, context);
 
+    this.createGame = this.createGame.bind(this);
+    this.updateGame = this.updateGame.bind(this);
     this.deleteGame = this.deleteGame.bind(this);
-    this.submit = this.submit.bind(this);
-    this.resetForm = this.resetForm.bind(this);
-    this.toggleNewGameForm = this.toggleNewGameForm.bind(this);
-    this.setCurrentGame = this.setCurrentGame.bind(this);
+
+    this.displayEditGameForm = this.displayEditGameForm.bind(this);
+    this.closeEditGameForm = this.closeEditGameForm.bind(this);
+
+    this.displayNewGameForm = this.displayNewGameForm.bind(this);
+    this.closeNewGameForm = this.closeNewGameForm.bind(this);
   }
 
   componentWillMount() {
     this.state = {
-      showForm: false,
+      newGame: false,
+      editGame: false,
       loading: true
     };
 
@@ -33,44 +41,34 @@ class ListGamesContainer extends Component {
     this.props.actions.deleteGame(id);
   }
 
-  submit(game) {
-    this.setState({loading: true});
-
-    if (this.props.games.currentGame) {
-      this.props.actions.updateGame(this.props.games.currentGame.id, game)
-        .then(function(response) {
-          this.props.actions.updateGameSuccess(response);
-          this.setState({showForm: false});
-          this.setState({loading: false});
-        }.bind(this));
-
-      return;
-    }
-
-    this.props.actions.createGame(game)
-      .then((success)=> {
-        this.props.actions.createGameSuccess(success.data);
-        this.setState({showForm: false});
-        this.setState({loading: false});
-      });
+  createGame() {
+    // TODO
+    console.log('clicked');
   }
 
-  resetForm() {
-    this.setState({showForm: false});
-    this.props.actions.clearCurrentGame();
+  updateGame() {
+    // TODO
+    console.log('clicked');
   }
 
-  toggleNewGameForm() {
-    if (this.state.showForm) {
-      this.props.actions.clearCurrentGame();
-    }
-
-    this.setState({showForm: !this.state.showForm});
+  displayNewGameForm() {
+    this.closeEditGameForm();
+    this.setState({newGame: true});
   }
 
-  setCurrentGame(game) {
+  closeNewGameForm() {
+    this.setState({newGame: false});
+  }
+
+  displayEditGameForm(game) {
+    this.closeNewGameForm();
     this.props.actions.setCurrentGame(game);
-    this.setState({showForm: true});
+    this.setState({newGame: false, editGame: true});
+  }
+
+  closeEditGameForm() {
+    this.props.actions.clearCurrentGame();
+    this.setState({editGame: false});
   }
 
   render() {
@@ -85,24 +83,28 @@ class ListGamesContainer extends Component {
         return (<GameRow game={game}
                          key={index}
                          deleteGame={self.deleteGame}
-                         setCurrentGame={self.setCurrentGame}/>);
+                         editGame={self.displayEditGameForm}/>);
       });
     }
 
     if (loading) {
-      return <LoadingComponent />
+      return <LoadingComponent />;
     }
 
     return (
       <div className="row">
-        {this.state.showForm &&
-        <div className="block-flat col-md-offset-3 col-md-6">
-          <div className="header"><h2>New Game</h2></div>
-          <div className="content">
-            <GameForm submit={this.submit} handleReset={this.resetForm}/>
-          </div>
-        </div>
-        }
+        <TransitionGroup transitionName="fade" transitionEnterTimeout={250} transitionLeaveTimeout={250}>
+          {this.state.newGame &&
+          <Portlet title="Create a Game" closeWindow={this.closeNewGameForm}>
+            <GameForm submit={this.createGame} />
+          </Portlet>
+          }
+          {this.state.editGame &&
+          <Portlet title="Edit Game" closeWindow={this.closeEditGameForm}>
+            <GameForm submit={this.updateGame} />
+          </Portlet>
+          }
+        </TransitionGroup>
         <div className="block-flat col-md-offset-3  col-md-6">
           <div className="header">
             <h2>Games</h2>
@@ -111,13 +113,12 @@ class ListGamesContainer extends Component {
 
             {errors && <AlertComponent type="error" message={errors} dismissable={false}/>}
 
-            {!loading && !errors && <div className="table">
+            {!loading && !errors &&
+            <div className="table">
               <div className="pull-left"></div>
               <div className="pull-right">
-                <button className="btn btn-primary btn-sm" onClick={this.toggleNewGameForm}>
-                  <i className="fa fa-plus-square"></i>&nbsp;
-                  {!this.state.showForm && 'New Game'}
-                  {this.state.showForm && 'Hide Form'}
+                <button className="btn btn-primary btn-sm" onClick={this.displayNewGameForm}>
+                  <i className="fa fa-plus-square"></i> New Game
                 </button>
               </div>
               <div className="clearfix"></div>

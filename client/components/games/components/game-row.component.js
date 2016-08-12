@@ -3,14 +3,8 @@ import {Link} from 'react-router';
 
 const GameRow = (props) => {
   const game = props.game;
-
-  const deleteGame = () => {
-    props.deleteGame(props.game.id);
-  };
-
-  const setCurrentGame = () => {
-    props.setCurrentGame(props.game);
-  };
+  const deleteGame = () => props.deleteGame(game.id);
+  const editGame = () => props.editGame(game);
 
   return (
     <tr>
@@ -24,7 +18,7 @@ const GameRow = (props) => {
                   type="button" aria-expanded="false"><span className="caret"></span><span
             className="sr-only">Toggle Dropdown</span></button>
           <ul role="menu" className="dropdown-menu">
-            <li><a onClick={setCurrentGame}>Edit</a></li>
+            <li><a onClick={editGame}>Edit</a></li>
             <li className="divider"></li>
             <li><a onClick={deleteGame}>Remove</a></li>
           </ul>
@@ -37,7 +31,7 @@ const GameRow = (props) => {
 GameRow.propTypes = {
   game: PropTypes.object.isRequired,
   deleteGame: PropTypes.func.isRequired,
-  setCurrentGame: PropTypes.func.isRequired
+  editGame: PropTypes.func.isRequired
 };
 
 export default GameRow;

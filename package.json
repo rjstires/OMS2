@@ -57,7 +57,7 @@
     "npm-run-all": "1.8.0",
     "object-assign": "4.1.0",
     "pg": "^6.0.2",
-    "react": "15.0.2",
+    "react": "15.3.0",
     "react-dom": "15.0.2",
     "react-redux": "4.4.5",
     "react-router": "2.4.0",
@@ -69,7 +69,8 @@
     "sass-loader": "3.2.0",
     "style-loader": "0.13.1",
     "toastr": "^2.1.2",
-    "webpack": "1.13.0"
+    "webpack": "1.13.0",
+    "react-addons-css-transition-group": "latest"
   },
   "devDependencies": {
     "browser-sync": "2.12.5",
