@@ -19,26 +19,26 @@ class PortletComponent extends Component {
 
     const divClasses = Object.assign({}, {
       'block-flat': true,
-      'col-md-offset-3': true,
-      'col-md-6': true,
       'closed': !this.state.opened
     });
 
     return (
-      <div className={classnames(divClasses)} style={divStyles}>
-        <div className="header">
-          <div className="actions">
-            <a className="minimize" onClick={this.toggleState}><i className="fa fa-chevron-down"></i></a>
-            {this.props.refresh && <a className="refresh" href="#"><i className="fa fa-repeat"></i></a>}
-            <a className="close-down" onClick={this.props.closeWindow}><i
-              className="fa fa-times"></i></a>
+        <div className={classnames(divClasses)} style={divStyles}>
+          <div className="header">
+            <div className="actions">
+              <a className="minimize" onClick={this.toggleState}><i
+                className="fa fa-chevron-down"></i></a>
+              {this.props.refresh &&
+              <a className="refresh" href="#"><i className="fa fa-repeat"></i></a>}
+              <a className="close-down" onClick={this.props.closeWindow}><i
+                className="fa fa-times"></i></a>
+            </div>
+            <h3>{this.props.title}</h3>
           </div>
-          <h3>{this.props.title}</h3>
+          <div className="content">
+            {this.props.children}
+          </div>
         </div>
-        <div className="content">
-          {this.props.children}
-        </div>
-      </div>
     );
   }
 }

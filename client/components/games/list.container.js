@@ -117,49 +117,54 @@ class ListGamesContainer extends Component {
 
     return (
       <div className="row">
-        <TransitionGroup transitionName="fade" transitionEnterTimeout={250} transitionLeaveTimeout={250}>
-          {this.state.newGame &&
-          <Portlet title="Create a Game" closeWindow={this.closeNewGameForm}>
-            <GameForm onSubmit={this.createGame} />
-          </Portlet>
-          }
-          {this.state.editGame &&
-          <Portlet title="Edit Game" closeWindow={this.closeEditGameForm}>
-            <GameForm onSubmit={this.updateGame} />
-          </Portlet>
-          }
-        </TransitionGroup>
-        <div className="block-flat col-md-offset-3  col-md-6">
-          <div className="header">
-            <h2>Games</h2>
-          </div>
-          <div className="content">
+        <div className="col-md-offset-3  col-md-6">
+          <TransitionGroup transitionName="fade" transitionEnterTimeout={250}
+                           transitionLeaveTimeout={250}>
+            {this.state.newGame &&
+            <Portlet title="Create a Game" closeWindow={this.closeNewGameForm}>
+              <GameForm onSubmit={this.createGame}/>
+            </Portlet>
+            }
+            {this.state.editGame &&
+            <Portlet title="Edit Game" closeWindow={this.closeEditGameForm}>
+              <GameForm onSubmit={this.updateGame}/>
+            </Portlet>
+            }
+          </TransitionGroup>
+        </div>
+        <div className="col-md-offset-3  col-md-6">
+          <div className="block-flat">
+            <div className="header">
+              <h2>Games</h2>
+            </div>
+            <div className="content">
 
-            {errors && <AlertComponent type="error" message={errors} dismissable={false}/>}
+              {errors && <AlertComponent type="error" message={errors} dismissable={false}/>}
 
-            {!loading && !errors &&
-            <div className="table">
-              <div className="pull-left"></div>
-              <div className="pull-right">
-                <button className="btn btn-primary btn-sm" onClick={this.displayNewGameForm}>
-                  <i className="fa fa-plus-square"></i> New Game
-                </button>
-              </div>
-              <div className="clearfix"></div>
-              <table id="product-table" className="form-inline">
-                <thead>
-                <tr role="row">
-                  <th className="sorting" role="columnheader">ID</th>
-                  <th className="sorting" role="columnheader">Title</th>
-                  <th className="sorting" role="columnheader">Products</th>
-                  <th className="sorting right" role="columnheader">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {gamesList}
-                </tbody>
-              </table>
-            </div>}
+              {!loading && !errors &&
+              <div className="table">
+                <div className="pull-left"></div>
+                <div className="pull-right">
+                  <button className="btn btn-primary btn-sm" onClick={this.displayNewGameForm}>
+                    <i className="fa fa-plus-square"></i> New Game
+                  </button>
+                </div>
+                <div className="clearfix"></div>
+                <table id="product-table" className="form-inline">
+                  <thead>
+                  <tr role="row">
+                    <th className="sorting" role="columnheader">ID</th>
+                    <th className="sorting" role="columnheader">Title</th>
+                    <th className="sorting" role="columnheader">Products</th>
+                    <th className="sorting right" role="columnheader">Actions</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {gamesList}
+                  </tbody>
+                </table>
+              </div>}
+            </div>
           </div>
         </div>
       </div>

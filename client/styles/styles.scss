@@ -5,6 +5,9 @@
   margin-top: 60px;
 }
 
+/**
+  * Toast
+**/
 #toast-container {
   top: 74px !important;;
   right: auto !important;
@@ -51,6 +54,9 @@
   margin-left: -215px;
 }
 
+/**
+  * Transition Group
+**/
 .fade-enter {
   opacity: 0.1;
   &.fade-enter-active {
@@ -73,4 +79,23 @@
     -o-transition: opacity 250ms ease-in;
     transition: opacity 250ms ease-in;
   }
+}
+
+/**
+  * Portlet
+**/
+.block-flat > .content {
+  max-height: 500px;
+  -webkit-transition: all 500ms cubic-bezier(0, 1, 0.5, 1);
+  -moz-transition: all 500ms cubic-bezier(0, 1, 0.5, 1);
+  -ms-transition: all 500ms cubic-bezier(0, 1, 0.5, 1);
+  -o-transition: all 500ms cubic-bezier(0, 1, 0.5, 1);
+  transition: all 500ms cubic-bezier(0, 1, 0.5, 1);
+}
+
+.block-flat.closed > .content {
+  overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
+  max-height: 0;
 }
