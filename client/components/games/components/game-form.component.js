@@ -12,8 +12,6 @@ let GameForm = (props) => {
         <label htmlFor="title">Game Title</label>
         <Field name="title" component={Input}/>
         <button className="btn btn-primary pull-right" type="submit">Submit</button>
-        <button className="btn btn-default pull-right" type="button">Cancel
-        </button>
         <div className="clearfix"></div>
       </form>
     );
