@@ -5,7 +5,7 @@ import {actions} from '../../modules/games.duck';
 import GameRow from './components/game-row.component';
 import LoadingComponent from '../loading.component';
 import AlertComponent from '../alert.component';
-import Portlet from '../games/portlet.component';
+import Portlet from '../common/portlet.component.js';
 import GameForm from './components/game-form.component';
 import TransitionGroup from 'react-addons-css-transition-group';
 import {SubmissionError} from 'redux-form';
