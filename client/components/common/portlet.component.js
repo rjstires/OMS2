@@ -42,7 +42,7 @@ class PortletComponent extends Component {
 
 PortletComponent.propTypes = {
   title: PropTypes.string.isRequired,
-  closeWindow: PropTypes.func.isRequired,
+  closeWindow: PropTypes.func,
   refresh: PropTypes.func,
   classes: PropTypes.object
 };

@@ -2,6 +2,8 @@ import initialState from './initial-state';
 import axios from 'axios';
 import _ from 'lodash';
 
+const apiURI = 'http://localhost:3000/games/'; // TODO EXPORT THIS SOMEWHERE
+
 /****************************************
  *  Constants
  ****************************************/
@@ -32,7 +34,10 @@ export default function reducer(state = initialState.games, action) {
       return Object.assign({}, state, {error: null, titles: []});
 
     case LOAD_GAMES_SUCCESS:
-      return Object.assign({}, state, {error: null, titles: action.games});
+      return Object.assign({}, state, {
+        titles: action.games,
+        pagination: action.pagination
+      });
 
     case LOAD_GAMES_FAILURE:
       return Object.assign({}, state, {error: action.error, titles: []});
@@ -93,11 +98,14 @@ export function loadGamesRequest() {
 }
 
 export function loadGamesSuccess(response) {
-  const data = response.data.results || {};
+  const data = response.data || {};
+  const games = data.results;
+  const pagination = data.pagination;
 
   return {
     type: LOAD_GAMES_SUCCESS,
-    games: data
+    games,
+    pagination
   };
 }
 
@@ -118,10 +126,15 @@ export function loadGamesFailure(response) {
   };
 }
 
-export function loadGames() {
+export function loadGames(page = 1, pageSize = 5) {
   return (dispatch) => {
     dispatch(loadGamesRequest());
-    return axios.get('http://localhost:3000/games')
+    return axios.get(apiURI, {
+      params: {
+        page: page,
+        pageSize: pageSize
+      }
+    })
       .then((response) => dispatch(loadGamesSuccess(response)))
       .catch((response) => dispatch(loadGamesFailure(response)));
   };
@@ -130,7 +143,8 @@ export function loadGames() {
 /** Create a game. **/
 export const createGame = (game) => {
   return (dispatch) => {
-    return axios.post('http://localhost:3000/games', game);
+
+    return axios.post(apiURI, game);
   }
 };
 
@@ -165,7 +179,7 @@ export const deleteGameFailure = (response) => {
 export const deleteGame = (id) => {
   return (dispatch) => {
     dispatch(deleteGameRequest());
-    return axios.delete(`http://localhost:3000/games/${id}`)
+    return axios.delete(apiURI + id)
       .then(() => dispatch(deleteGameSuccess(id)))
       .catch((response) => dispatch(deleteGameFailure(response)));
   };
@@ -188,7 +202,7 @@ export const updateGame = (id, game) => {
   const updatedGame = stripUnedittableFields(game);
 
   return (dispatch) => {
-    return axios.patch(`http://localhost:3000/games/${id}`, updatedGame);
+    return axios.patch(apiURI + id, updatedGame);
   };
 };
 

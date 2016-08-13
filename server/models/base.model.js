@@ -12,6 +12,9 @@ boostingBookshelf.plugin('virtuals');
 // Registry prevents circular dependancies when defining models.
 boostingBookshelf.plugin('registry');
 
+// Because pagination is a bitch.
+boostingBookshelf.plugin('pagination');
+
 // Cache an instance of the model prototype.
 proto = boostingBookshelf.Model.prototype;
 
@@ -39,7 +42,7 @@ boostingBookshelf.Model = boostingBookshelf.Model.extend({
   },
 
   findAll: function(data, options) {
-    return this.forge(data).fetchAll(options);
+    return this.forge(data).fetchPage(options);
   },
 
   updateById: function(id, data) {

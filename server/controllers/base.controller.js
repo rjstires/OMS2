@@ -1,13 +1,28 @@
 const boostingEdgeBookshelf = require('../models/base.model');
 const BaseController = {
   getAll: function(req, res, next) {
-    this.model.findAll()
+    const options = {};
+
+    if(req.query.page && req.query.pageSize){
+      options.page = req.query.page;
+      options.pageSize = req.query.pageSize;
+    }
+
+    this.model.findAll(null, options)
       .then(function(results) {
+        const responseObject = {};
+        responseObject.results = results.toJSON();
+
+        if(results.pagination) {
+          responseObject.pagination = results.pagination;
+        }
+
+        console.log('responseObject', responseObject);
         if (results.length === 0) {
           res.status(204).send();
           return;
         }
-        res.status(200).send({results: results});
+        res.status(200).send(responseObject);
       })
       .catch(function(error) {
         handleError(error, res);

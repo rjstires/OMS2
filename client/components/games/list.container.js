@@ -1,16 +1,22 @@
+// Libraries
 import React, {PropTypes, Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import TransitionGroup from 'react-addons-css-transition-group';
+import {SubmissionError} from 'redux-form';
+import Promise from 'bluebird';
+import _ from 'lodash';
+
+// Ducks
 import {actions} from '../../modules/games.duck';
+
+// Components
 import GameRow from './components/game-row.component';
 import LoadingComponent from '../loading.component';
 import AlertComponent from '../alert.component';
 import Portlet from '../common/portlet.component.js';
 import GameForm from './components/game-form.component';
-import TransitionGroup from 'react-addons-css-transition-group';
-import {SubmissionError} from 'redux-form';
-import Promise from 'bluebird';
-import _ from 'lodash';
+import Pagination from '../common/pagination.component';
 
 class ListGamesContainer extends Component {
   constructor(props, context) {
@@ -28,6 +34,8 @@ class ListGamesContainer extends Component {
 
     this.displayNewGameForm = this.displayNewGameForm.bind(this);
     this.closeNewGameForm = this.closeNewGameForm.bind(this);
+
+    this.goToPage = this.goToPage.bind(this);
   }
 
   componentWillMount() {
@@ -109,11 +117,16 @@ class ListGamesContainer extends Component {
     this.setState({list: false});
   }
 
+  goToPage(pageNum){
+    this.props.actions.loadGames(pageNum);
+  }
+
   render() {
     const self = this;
     const games = self.props.games.titles;
     const loading = self.state.loading;
     const errors = self.props.games.errors;
+    const pagination = self.props.games.pagination;
 
     let gamesList = [];
     if (games && games.length > 0) {
@@ -128,6 +141,7 @@ class ListGamesContainer extends Component {
     if (loading) {
       return <LoadingComponent />;
     }
+
 
     return (
       <div className="row">
@@ -172,6 +186,14 @@ class ListGamesContainer extends Component {
                         {gamesList}
                         </tbody>
                       </table>
+                      <Pagination
+                        page={pagination.page}
+                        pageSize={pagination.pageSize}
+                        rowCount={pagination.rowCount}
+                        pageCount={pagination.pageCount}
+                        goToPage={this.goToPage}
+                      />
+
                     </div>}
               </Portlet>
             }
