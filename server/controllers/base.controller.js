@@ -59,6 +59,7 @@ const BaseController = {
 };
 
 function handleError(error, res){
+  console.log(error.toString());
   return res.status(400).send({error: error});
 }
 

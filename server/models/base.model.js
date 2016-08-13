@@ -2,7 +2,7 @@ const dbConfig = require('../db/knexfile');
 const knex = require('knex')(dbConfig);
 const boostingBookshelf = require('bookshelf')(knex);
 const _ = require('lodash');
-const checkit = require('checkit');
+const Checkit = require('checkit');
 
 let proto;
 
@@ -25,7 +25,7 @@ boostingBookshelf.Model = boostingBookshelf.Model.extend({
 
   validateSave(){
     const rules = this.validationRules || {};
-    return checkit(rules).run(this.attributes);
+    return new Checkit(rules).run(this.attributes);
   }
 
 }, {

@@ -53,7 +53,7 @@ exports.up = function(knex, Promise) {
 
   const game = knex.schema.createTable('games', function(t) {
     t.increments('id').primary();
-    t.string('title');
+    t.string('title').unique();
     t.timestamps(true, true);
   });
 

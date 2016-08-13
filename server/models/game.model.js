@@ -10,9 +10,16 @@ const Game = boostingBookshelf.Model.extend({
   },
 
   validationRules: {
-    title: 'required'
+    title: [
+      'required',
+      (value) => {
+        return Game.findOne({title: value}).then((exists) => {
+          if (exists)
+            throw new Error(`${value} already exists.`);
+        });
+      }
+    ]
   }
-
 });
 
 module.exports = boostingBookshelf.model('Game', Game);
