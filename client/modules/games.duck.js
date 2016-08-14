@@ -1,26 +1,27 @@
 import initialState from './initial-state';
 import axios from 'axios';
 import _ from 'lodash';
+import {reset} from 'redux-form';
 
 const apiURI = 'http://localhost:3000/games/'; // TODO EXPORT THIS SOMEWHERE
 
 /****************************************
  *  Constants
  ****************************************/
-const LOAD_GAMES_REQUEST = 'LOAD_GAMES_REQUEST';
-const LOAD_GAMES_SUCCESS = 'LOAD_GAMES_SUCCESS';
-const LOAD_GAMES_FAILURE = 'LOAD_GAMES_FAILURE';
+export const LOAD_GAMES_REQUEST = 'LOAD_GAMES_REQUEST';
+export const LOAD_GAMES_SUCCESS = 'LOAD_GAMES_SUCCESS';
+export const LOAD_GAMES_FAILURE = 'LOAD_GAMES_FAILURE';
 
-const CREATE_GAME_SUCCESS = 'CREATE_GAME_SUCCESS';
+export const CREATE_GAME_SUCCESS = 'CREATE_GAME_SUCCESS';
 
-const DELETE_GAME_REQUEST = 'DELETE_GAME_REQUEST';
-const DELETE_GAME_SUCCESS = 'DELETE_GAME_SUCCESS';
-const DELETE_GAME_FAILURE = 'DELETE_GAME_FAILURE';
+export const DELETE_GAME_REQUEST = 'DELETE_GAME_REQUEST';
+export const DELETE_GAME_SUCCESS = 'DELETE_GAME_SUCCESS';
+export const DELETE_GAME_FAILURE = 'DELETE_GAME_FAILURE';
 
-const UPDATE_GAME_SUCCESS = 'UPDATE_GAME_SUCCESS';
+export const UPDATE_GAME_SUCCESS = 'UPDATE_GAME_SUCCESS';
 
-const SET_CURRENT_GAME = 'SET_CURRENT_GAME';
-const CLEAR_CURRENT_GAME = 'CLEAR_CURRENT_GAME';
+export const SET_CURRENT_GAME = 'SET_CURRENT_GAME';
+export const CLEAR_CURRENT_GAME = 'CLEAR_CURRENT_GAME';
 
 /****************************************
  *  Reducer
@@ -187,9 +188,9 @@ export const deleteGame = (id) => {
 
 export const setCurrentGame = (game) => {
   return {
-    type: SET_CURRENT_GAME,
-    game: game
-  };
+      type: SET_CURRENT_GAME,
+      game: game
+    };
 };
 
 export const clearCurrentGame = () => {

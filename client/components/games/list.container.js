@@ -3,7 +3,7 @@ import React, {PropTypes, Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import TransitionGroup from 'react-addons-css-transition-group';
-import {SubmissionError} from 'redux-form';
+import {SubmissionError, initialize, reset} from 'redux-form';
 import Promise from 'bluebird';
 import _ from 'lodash';
 
@@ -23,26 +23,16 @@ class ListGamesContainer extends Component {
     super(props, context);
 
     this.createGame = this.createGame.bind(this);
+    this.editGame = this.editGame.bind(this);
     this.updateGame = this.updateGame.bind(this);
     this.deleteGame = this.deleteGame.bind(this);
-
-    this.displayList = this.displayList.bind(this);
-    this.closeList = this.closeList.bind(this);
-
-    this.displayEditGameForm = this.displayEditGameForm.bind(this);
-    this.closeEditGameForm = this.closeEditGameForm.bind(this);
-
-    this.displayNewGameForm = this.displayNewGameForm.bind(this);
-    this.closeNewGameForm = this.closeNewGameForm.bind(this);
-
     this.goToPage = this.goToPage.bind(this);
   }
 
   componentWillMount() {
     this.state = {
-      newGame: false,
+      newGame: true,
       editGame: false,
-      list: true,
       loading: true
     };
 
@@ -60,8 +50,7 @@ class ListGamesContainer extends Component {
       this.props.actions.createGame(game)
         .then((res) => {
           this.props.actions.createGameSuccess(res.data);
-          this.closeNewGameForm();
-          resolve(res);
+          this.props.actions.loadGames();
         })
         .catch((err) => {
           const errors = err.data.error;
@@ -74,47 +63,22 @@ class ListGamesContainer extends Component {
 
   }
 
+  editGame(game) {
+    this.props.actions.setCurrentGame(game);
+    this.props.dispatch(initialize('gameForm', game));
+  }
+
   updateGame(game) {
     const id = game.id;
     return new Promise((resolve, reject) => {
       this.props.actions.updateGame(id, game)
         .then((res) => {
-          this.closeEditGameForm();
           this.props.actions.updateGameSuccess(res.data);
+          resolve();
         })
         .catch(reject); // TODO Rejections...
     });
 
-  }
-
-  displayNewGameForm() {
-    this.setState({newGame: true});
-    this.closeList();
-  }
-
-  closeNewGameForm() {
-    this.setState({newGame: false});
-    this.displayList();
-  }
-
-  displayEditGameForm(game) {
-    this.props.actions.setCurrentGame(game);
-    this.setState({editGame: true});
-    this.closeList();
-  }
-
-  closeEditGameForm() {
-    this.props.actions.clearCurrentGame();
-    this.setState({editGame: false});
-    this.displayList();
-  }
-
-  displayList() {
-    this.setState({list: true});
-  }
-
-  closeList() {
-    this.setState({list: false});
   }
 
   goToPage(pageNum){
@@ -123,18 +87,19 @@ class ListGamesContainer extends Component {
 
   render() {
     const self = this;
-    const games = self.props.games.titles;
     const loading = self.state.loading;
-    const errors = self.props.games.errors;
-    const pagination = self.props.games.pagination;
+    const {titles, errors, pagination, currentGame} = self.props.games;
+    const handleForm = (currentGame) ? self.updateGame : self.createGame;
+    const formTitle = (currentGame) ? 'Update Game' : 'Create Game';
 
     let gamesList = [];
-    if (games && games.length > 0) {
-      gamesList = games.map(function(game, index) {
+
+    if (titles && titles.length > 0) {
+      gamesList = titles.map(function(game, index) {
         return (<GameRow game={game}
                          key={index}
                          deleteGame={self.deleteGame}
-                         editGame={self.displayEditGameForm}/>);
+                         editGame={self.editGame}/>);
       });
     }
 
@@ -145,58 +110,43 @@ class ListGamesContainer extends Component {
 
     return (
       <div className="row">
-        <div className="col-md-offset-3  col-md-6">
+        <div className="col-md-6">
+          <Portlet title="Games">
+            {errors && <AlertComponent type="error" message={errors} dismissable={false}/>}
+
+            {!loading && !errors &&
+            <div className="table">
+              {/*<div className="pull-left"></div>
+              <div className="pull-right"></div>*/}
+              <div className="clearfix"></div>
+              <table id="product-table" className="form-inline">
+                <thead>
+                <tr role="row">
+                  <th className="sorting" role="columnheader">ID</th>
+                  <th className="sorting" role="columnheader">Title</th>
+                  <th className="sorting" role="columnheader">Products</th>
+                  <th className="sorting right" role="columnheader">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {gamesList}
+                </tbody>
+              </table>
+              <Pagination
+                page={pagination.page}
+                pageSize={pagination.pageSize}
+                rowCount={pagination.rowCount}
+                pageCount={pagination.pageCount}
+                goToPage={this.goToPage}
+              />
+            </div>}
+          </Portlet>
+        </div>
+        <div className="col-md-6">
           <TransitionGroup transitionName="fade" transitionEnterTimeout={250} transitionLeave={false}>
-
-          {this.state.newGame &&
-            <Portlet title="Create a Game" closeWindow={this.closeNewGameForm}>
-              <GameForm onSubmit={this.createGame}/>
+            <Portlet title={formTitle} closeWindow={this.closeNewGameForm}>
+              <GameForm onSubmit={handleForm}/>
             </Portlet>
-            }
-
-            {this.state.editGame &&
-            <Portlet title="Edit Game" closeWindow={this.closeEditGameForm}>
-              <GameForm onSubmit={this.updateGame}/>
-            </Portlet>
-            }
-
-            {this.state.list &&
-              <Portlet title="Games">
-                    {errors && <AlertComponent type="error" message={errors} dismissable={false}/>}
-
-                    {!loading && !errors &&
-                    <div className="table">
-                      <div className="pull-left"></div>
-                      <div className="pull-right">
-                        <button className="btn btn-primary btn-sm" onClick={this.displayNewGameForm}>
-                          <i className="fa fa-plus-square"></i> New Game
-                        </button>
-                      </div>
-                      <div className="clearfix"></div>
-                      <table id="product-table" className="form-inline">
-                        <thead>
-                        <tr role="row">
-                          <th className="sorting" role="columnheader">ID</th>
-                          <th className="sorting" role="columnheader">Title</th>
-                          <th className="sorting" role="columnheader">Products</th>
-                          <th className="sorting right" role="columnheader">Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {gamesList}
-                        </tbody>
-                      </table>
-                      <Pagination
-                        page={pagination.page}
-                        pageSize={pagination.pageSize}
-                        rowCount={pagination.rowCount}
-                        pageCount={pagination.pageCount}
-                        goToPage={this.goToPage}
-                      />
-
-                    </div>}
-              </Portlet>
-            }
           </TransitionGroup>
         </div>
       </div>
@@ -206,7 +156,8 @@ class ListGamesContainer extends Component {
 
 ListGamesContainer.propTypes = {
   games: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  dispatch: PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -217,7 +168,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch)
+    actions: bindActionCreators(actions, dispatch),
+    dispatch
   };
 }
 
