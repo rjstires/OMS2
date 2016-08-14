@@ -1,10 +1,10 @@
-import React, {PropTypes, Component} from 'react';
+import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {SubmissionError, Field, reduxForm} from 'redux-form';
+import {reduxForm, Field} from 'redux-form';
 import Input from '../../form/input.component.js';
 
 const fields = ['title'];
-const formName = 'newGameForm';
+const formName = 'gameForm';
 
 let GameForm = (props) => {
     return (
@@ -15,7 +15,7 @@ let GameForm = (props) => {
         <div className="clearfix"></div>
       </form>
     );
-}
+};
 
 const validate = (values) => {
   const errors = {};
@@ -40,8 +40,8 @@ GameForm = reduxForm({
 )(GameForm);
 
 GameForm = connect(
-  state => ({initialValues: state.games.currentGame}),
-  {}
+  null,
+  null
 )(GameForm);
 
 export default GameForm;

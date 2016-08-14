@@ -16,7 +16,7 @@ const Pagination = (props) => {
   const rowElements = [];
   const goToPreviousPage = () => props.goToPage(page - 1);
   const goToNextPage = () => props.goToPage(page + 1);
-  const showPreviousPage = (page - 1 < 0);
+  const showPreviousPage = (page - 1 > 0);
   const showNextPage = (page + 1 <= pageCount);
 
   for (let i = 1; i <= pageCount; i++) {
@@ -38,7 +38,7 @@ const Pagination = (props) => {
       <ul className="pagination">
         <li className={Classnames({disabled: !showPreviousPage})}><a onClick={showPreviousPage && goToPreviousPage}>«</a></li>
         {rowElements}
-        <li className={Classnames({disabled: !showNextPage})}><a onClick={showNextPage && goToPreviousPage}>»</a></li>
+        <li className={Classnames({disabled: !showNextPage})}><a onClick={showNextPage && goToNextPage}>»</a></li>
       </ul>
     </div>
   );
